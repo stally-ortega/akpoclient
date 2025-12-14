@@ -27,6 +27,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'prestamos',
+    loadComponent: () => import('./features/prestamos/prestamos-page.component').then(m => m.PrestamosPageComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: '',
     redirectTo: 'dashboard',
     pathMatch: 'full'

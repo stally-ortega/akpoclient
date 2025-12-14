@@ -5,7 +5,7 @@ export interface AccesoriosEquipo {
   diadema?: string; // Serial si existe
 }
 
-export type EstadoEquipo = 'DISPONIBLE' | 'ALMACEN' | 'ASIGNADO' | 'REPARACION' | 'BAJA';
+export type EstadoEquipo = 'DISPONIBLE' | 'ALMACEN' | 'ASIGNADO' | 'REPARACION' | 'BAJA' | 'PRESTAMO';
 
 export interface EquipoInventario {
   serial: string;

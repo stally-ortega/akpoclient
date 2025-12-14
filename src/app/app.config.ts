@@ -4,7 +4,7 @@ import { provideRouter, withComponentInputBinding, withViewTransitions } from '@
 import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
-import { LucideAngularModule, LayoutDashboard, Monitor, Mail, FileText, Package, Keyboard, Mouse, HardDrive, Headphones, X, User, Calendar, Tag, Activity } from 'lucide-angular';
+import { LucideAngularModule, LayoutDashboard, Monitor, Mail, FileText, Package, Keyboard, Mouse, HardDrive, Headphones, X, User, Calendar, Tag, Activity, Clock, Plus, Trash, CheckSquare, CheckCircle, ChevronRight, Check, Search, Download } from 'lucide-angular';
 
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
@@ -37,7 +37,16 @@ export const appConfig: ApplicationConfig = {
       User,
       Calendar,
       Tag,
-      Activity
+      Activity,
+      Clock,
+      Plus,
+      Trash,
+      CheckSquare,
+      CheckCircle,
+      ChevronRight,
+      Check,
+      Search,
+      Download
     }))
   ]
 };
