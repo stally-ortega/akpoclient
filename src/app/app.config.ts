@@ -9,6 +9,7 @@ import { LucideAngularModule, LayoutDashboard, Monitor, Mail, FileText, Package,
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
+import { loadingInterceptor } from './core/interceptors/loading.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,7 +22,7 @@ export const appConfig: ApplicationConfig = {
     }),
     provideHttpClient(
       withFetch(),
-      withInterceptors([authInterceptor, errorInterceptor])
+      withInterceptors([authInterceptor, errorInterceptor, loadingInterceptor])
     ),
     importProvidersFrom(LucideAngularModule.pick({ 
       LayoutDashboard, 
