@@ -22,8 +22,40 @@ import { LucideAngularModule } from 'lucide-angular';
       </div>
 
       <!-- Stats Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6" *ngIf="stats() as s">
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6" *ngIf="stats() as s">
         
+        <!-- Prestamos Card -->
+        <div *ngIf="s.prestamos" (click)="navigateTo('/prestamos')" 
+             class="bg-white rounded-xl shadow-sm p-6 border border-slate-100 cursor-pointer hover:shadow-md transition-all group">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-slate-700 group-hover:text-primary transition-colors">Préstamos</h3>
+            <div class="p-2 bg-orange-50 text-orange-600 rounded-lg group-hover:bg-orange-100 transition-colors">
+              <lucide-icon name="briefcase" class="w-6 h-6"></lucide-icon>
+            </div>
+          </div>
+          <div class="space-y-4">
+             <div class="text-center py-4 bg-orange-50 rounded-lg">
+              <span class="block text-4xl font-bold text-orange-600">{{ s.prestamos.totalActivos }}</span>
+              <span class="text-sm text-orange-700 font-medium">Total Activos</span>
+            </div>
+            
+            <div class="flex justify-between items-center text-sm text-slate-500 px-2">
+              <span>Realizados Hoy</span>
+              <span class="font-bold text-slate-900">{{ s.prestamos.realizadosHoy }}</span>
+            </div>
+
+            <div class="flex justify-between items-center text-sm text-slate-500 px-2">
+              <span>Devoluciones Hoy</span>
+              <span class="font-bold text-green-600">{{ s.prestamos.devolucionesHoy }}</span>
+            </div>
+
+            <div class="flex justify-between items-center text-sm text-slate-500 px-2">
+              <span>Vencidos</span>
+              <span class="font-bold text-red-600">{{ s.prestamos.vencidos }}</span>
+            </div>
+          </div>
+        </div>
+
         <!-- Inventario Card -->
         <div (click)="navigateTo('/inventario')" 
              class="bg-white rounded-xl shadow-sm p-6 border border-slate-100 cursor-pointer hover:shadow-md transition-all group">
@@ -92,16 +124,16 @@ import { LucideAngularModule } from 'lucide-angular';
           </div>
           <div class="space-y-4">
             <div class="text-center py-4 bg-cyan-50 rounded-lg">
-              <span class="block text-4xl font-bold text-cyan-600">{{ s.correos.hoy }}</span>
-              <span class="text-sm text-cyan-700 font-medium">Enviados hoy</span>
+              <span class="block text-4xl font-bold text-cyan-600">{{ s.correos.enviadosHoy }}</span>
+              <span class="text-sm text-cyan-700 font-medium">Enviados Hoy</span>
             </div>
              <div class="flex justify-between items-center text-sm text-slate-500 px-2">
-              <span>En cola</span>
-              <span class="font-medium text-slate-900">{{ s.correos.pendientes }}</span>
+              <span>Errores Hoy</span>
+              <span class="font-medium text-red-600">{{ s.correos.erroresHoy }}</span>
             </div>
-            <div class="flex justify-between items-center text-sm text-slate-500 px-2" *ngIf="s.correos.errores > 0">
-              <span class="text-red-500">Errores</span>
-              <span class="font-medium text-red-600">{{ s.correos.errores }}</span>
+            <div class="flex justify-between items-center text-sm text-slate-500 px-2">
+              <span>Total Histórico</span>
+              <span class="font-medium text-slate-900">{{ s.correos.totalEnviados }}</span>
             </div>
           </div>
         </div>

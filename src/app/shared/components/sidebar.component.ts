@@ -36,10 +36,19 @@ import { LucideAngularModule } from 'lucide-angular';
             <lucide-icon name="clock" class="w-5 h-5"></lucide-icon>
             Préstamos
           </a>
+          <a routerLink="/alertas" routerLinkActive="bg-slate-800 text-white" class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+            <lucide-icon name="bell" class="w-5 h-5"></lucide-icon>
+            Alertas
+          </a>
         </nav>
       </div>
     </aside>
   `,
   styles: []
 })
-export class SidebarComponent {}
+export class SidebarComponent {
+  // ... (keep class body if any, but currently empty/simple)
+  logout() {
+    // ...
+  }
+}

@@ -28,12 +28,17 @@ export const routes: Routes = [
   },
   {
     path: 'prestamos',
-    loadComponent: () => import('./features/prestamos/prestamos-page.component').then(m => m.PrestamosPageComponent),
+    loadChildren: () => import('./features/prestamos/prestamos.routes').then(m => m.PRESTAMOS_ROUTES),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'alertas',
+    loadChildren: () => import('./features/alertas/alertas.routes').then(m => m.ALERTAS_ROUTES),
     canActivate: [authGuard]
   },
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {

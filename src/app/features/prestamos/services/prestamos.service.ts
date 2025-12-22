@@ -64,7 +64,6 @@ export class PrestamosService {
   public prestamosActivos = computed(() => this._prestamos().filter(p => p.estado === 'ACTIVO'));
 
   constructor() {
-    this.startAlertCheck();
   }
 
   registrarPrestamo(usuario: string, items: ItemPrestamo[], observaciones?: string) {
@@ -163,20 +162,5 @@ export class PrestamosService {
     });
   }
 
-  private startAlertCheck() {
-    // Check every minute
-    interval(60000).subscribe(() => {
-      const now = new Date();
-      const hour = now.getHours();
-      
-      // Alert after 4 PM (16:00) if there are active loans
-      if (hour >= 16 && this.prestamosActivos().length > 0) {
-        this.toast.warning(
-          `Hay ${this.prestamosActivos().length} préstamos activos pendientes de devolución.`,
-          'Recordatorio de Cierre',
-          { timeOut: 10000 }
-        );
-      }
-    });
-  }
+
 }

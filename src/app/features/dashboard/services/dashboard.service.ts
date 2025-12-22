@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, map } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 
 export interface DashboardStats {
@@ -18,9 +18,15 @@ export interface DashboardStats {
     errores: number;
   };
   correos: {
-    hoy: number;
-    pendientes: number;
-    errores: number;
+    enviadosHoy: number;
+    erroresHoy: number;
+    totalEnviados: number;
+  };
+  prestamos: {
+    realizadosHoy: number;
+    vencidos: number;
+    totalActivos: number;
+    devolucionesHoy: number;
   };
 }
 
@@ -47,12 +53,36 @@ export class DashboardService {
           errores: 2
         },
         correos: {
-          hoy: 3,
-          pendientes: 1,
-          errores: 0
+          enviadosHoy: 15,
+          erroresHoy: 1,
+          totalEnviados: 1250
+        },
+        prestamos: {
+          realizadosHoy: 8,
+          vencidos: 2,
+          totalActivos: 15,
+          devolucionesHoy: 3
         }
       }).pipe(delay(800));
     }
-    return this.http.get<DashboardStats>(this.apiUrl);
+    return this.http.get<any>(this.apiUrl).pipe(
+      // Map potential legacy backend response to new interface
+      // Use 'any' to avoid strict type mismatch during mapping
+        // @ts-ignore
+      map(data => ({
+        ...data,
+        correos: {
+           enviadosHoy: data.correos?.enviadosHoy ?? data.correos?.hoy ?? 0,
+           erroresHoy: data.correos?.erroresHoy ?? data.correos?.errores ?? 0,
+           totalEnviados: data.correos?.totalEnviados ?? 0
+        },
+        prestamos: {
+          realizadosHoy: data.prestamos?.realizadosHoy ?? 0,
+          vencidos: data.prestamos?.vencidos ?? 0,
+          totalActivos: data.prestamos?.totalActivos ?? data.prestamos?.activos ?? 0,
+          devolucionesHoy: data.prestamos?.devolucionesHoy ?? 0
+        }
+      }))
+    );
   }
 }
