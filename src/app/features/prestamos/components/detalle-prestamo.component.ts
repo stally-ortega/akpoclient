@@ -10,16 +10,16 @@ import { PrestamosService } from '../services/prestamos.service';
   imports: [CommonModule, LucideAngularModule],
   template: `
     <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" (click)="close()">
-      <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden" (click)="$event.stopPropagation()">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-md overflow-hidden" (click)="$event.stopPropagation()">
         
         <!-- Header -->
-        <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+        <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-900">
           <div>
-            <h2 class="text-lg font-bold text-slate-800">Detalle del Préstamo</h2>
-            <p class="text-xs text-slate-500 font-mono">{{ prestamo.id.slice(0, 8) }}...</p>
+            <h2 class="text-lg font-bold text-slate-800 dark:text-white">Detalle del Préstamo</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400 font-mono">{{ prestamo.id.slice(0, 8) }}...</p>
           </div>
-          <button (click)="close()" class="p-1 hover:bg-slate-200 rounded-full transition-colors">
-            <lucide-icon name="x" class="w-5 h-5 text-slate-500"></lucide-icon>
+          <button (click)="close()" class="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors">
+            <lucide-icon name="x" class="w-5 h-5 text-slate-500 dark:text-slate-400"></lucide-icon>
           </button>
         </div>
 
@@ -28,69 +28,69 @@ import { PrestamosService } from '../services/prestamos.service';
           
           <!-- User Info -->
           <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
+            <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-300 font-bold text-lg">
               {{ prestamo.usuarioSolicitante.charAt(0).toUpperCase() }}
             </div>
             <div>
-              <p class="text-sm text-slate-500">Solicitante</p>
-              <h3 class="font-semibold text-slate-900 text-lg">{{ prestamo.usuarioSolicitante }}</h3>
+              <p class="text-sm text-slate-500 dark:text-slate-400">Solicitante</p>
+              <h3 class="font-semibold text-slate-900 dark:text-white text-lg">{{ prestamo.usuarioSolicitante }}</h3>
             </div>
           </div>
 
           <!-- Time & Status -->
-          <div class="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+          <div class="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
             <div>
-               <p class="text-xs text-slate-500 mb-1">Fecha Préstamo</p>
-               <div class="flex items-center gap-2 text-sm font-medium text-slate-700">
+               <p class="text-xs text-slate-500 dark:text-slate-400 mb-1">Fecha Préstamo</p>
+               <div class="flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-300">
                  <lucide-icon name="calendar" class="w-4 h-4"></lucide-icon>
                  {{ prestamo.fechaPrestamo | date:'medium' }}
                </div>
                
                <ng-container *ngIf="prestamo.fechaDevolucionReal">
-                 <p class="text-xs text-slate-500 mt-3 mb-1">Fecha Devolución</p>
-                 <div class="flex items-center gap-2 text-sm font-medium text-slate-700">
-                   <lucide-icon name="clock" class="w-4 h-4 text-green-600"></lucide-icon>
+                 <p class="text-xs text-slate-500 dark:text-slate-400 mt-3 mb-1">Fecha Devolución</p>
+                 <div class="flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-300">
+                   <lucide-icon name="clock" class="w-4 h-4 text-green-600 dark:text-green-400"></lucide-icon>
                    {{ prestamo.fechaDevolucionReal | date:'medium' }}
                  </div>
                </ng-container>
             </div>
             <div class="text-right">
-              <span *ngIf="prestamo.estado === 'ACTIVO'" class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full">EN CURSO</span>
-              <span *ngIf="prestamo.estado === 'FINALIZADO'" class="px-2 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full">DEVUELTO</span>
+              <span *ngIf="prestamo.estado === 'ACTIVO'" class="px-2 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 text-xs font-bold rounded-full">EN CURSO</span>
+              <span *ngIf="prestamo.estado === 'FINALIZADO'" class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs font-bold rounded-full">DEVUELTO</span>
             </div>
           </div>
 
           <!-- Items List -->
           <div>
-            <h4 class="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
+            <h4 class="text-sm font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
               <lucide-icon name="package" class="w-4 h-4"></lucide-icon>
               Ítems Prestados ({{ prestamo.items.length }})
             </h4>
             <div class="space-y-2 max-h-48 overflow-y-auto pr-1">
-              <div *ngFor="let item of prestamo.items" class="flex items-center justify-between p-2 border border-slate-100 rounded-md hover:bg-slate-50">
+              <div *ngFor="let item of prestamo.items" class="flex items-center justify-between p-2 border border-slate-100 dark:border-slate-700 rounded-md hover:bg-slate-50 dark:hover:bg-slate-700/50">
                 <div class="flex items-center gap-3">
-                   <div class="p-1.5 bg-white border border-slate-200 rounded text-slate-500">
+                   <div class="p-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded text-slate-500 dark:text-slate-400">
                      <lucide-icon [name]="item.categoria === 'EQUIPO' ? 'monitor' : 'mouse'" class="w-4 h-4"></lucide-icon>
                    </div>
                    <div class="flex flex-col">
-                     <span class="text-sm font-medium text-slate-800">{{ item.nombre }}</span>
-                     <span *ngIf="item.serial" class="text-xs text-slate-500 font-mono">{{ item.serial }}</span>
+                     <span class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ item.nombre }}</span>
+                     <span *ngIf="item.serial" class="text-xs text-slate-500 dark:text-slate-400 font-mono">{{ item.serial }}</span>
                    </div>
                 </div>
-                <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-600">{{ item.categoria }}</span>
+                <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">{{ item.categoria }}</span>
               </div>
             </div>
           </div>
           
           <!-- Actions -->
           <div *ngIf="prestamo.estado === 'ACTIVO'" class="pt-2">
-            <button (click)="finalizar()" class="w-full py-3 bg-primary text-white font-medium rounded-lg hover:bg-slate-800 transition-colors flex items-center justify-center gap-2">
+            <button (click)="finalizar()" class="w-full py-3 bg-primary text-white font-medium rounded-lg hover:bg-slate-800 dark:hover:bg-slate-700 transition-colors flex items-center justify-center gap-2">
               <lucide-icon name="check-circle" class="w-5 h-5"></lucide-icon>
               Marcar como Devuelto y Finalizar
             </button>
           </div>
            <div *ngIf="prestamo.estado === 'FINALIZADO'" class="pt-2">
-             <div class="w-full py-3 bg-green-50 text-green-700 font-medium rounded-lg flex items-center justify-center gap-2 border border-green-200">
+             <div class="w-full py-3 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 font-medium rounded-lg flex items-center justify-center gap-2 border border-green-200 dark:border-green-800">
                <lucide-icon name="check" class="w-5 h-5"></lucide-icon>
                Préstamo Finalizado
              </div>

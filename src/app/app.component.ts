@@ -17,7 +17,7 @@ import { OnInit } from '@angular/core';
   standalone: true,
   imports: [RouterOutlet, CommonModule, HeaderComponent, SidebarComponent, LoadingComponent],
   template: `
-    <div class="h-screen bg-slate-50 flex flex-col overflow-hidden">
+    <div class="h-screen bg-slate-50 dark:bg-slate-950 flex flex-col overflow-hidden">
       <!-- Global Loading Screen -->
       <app-loading></app-loading>
       

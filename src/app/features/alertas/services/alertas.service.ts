@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { PrestamosService } from '../../prestamos/services/prestamos.service';
 import { InventarioService } from '../../inventario/services/inventario.service';
 import { ActasService } from '../../actas/services/actas.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 import { RuleEvaluatorService } from './rule-evaluator.service';
 
@@ -13,16 +14,24 @@ import { RuleEvaluatorService } from './rule-evaluator.service';
 })
 export class AlertasService {
   private toast = inject(ToastrService);
+  private authService = inject(AuthService); // Inject Auth
   private prestamosService = inject(PrestamosService);
   private inventarioService = inject(InventarioService);
   private actasService = inject(ActasService);
   private evaluator = inject(RuleEvaluatorService);
 
-  // State
+  // State (Raw list of ALL alerts available locally)
   private _alertas = signal<AlertConfig[]>([]);
   
-  // Public signal
-  public alertas = computed(() => this._alertas());
+  // Computed: Returns Global alerts + Private alerts for current user
+  public alertas = computed(() => {
+    const user = this.authService.currentUser();
+    const currentUserId = user ? user.id : null;
+    
+    return this._alertas().filter(a => 
+      a.isGlobal || (currentUserId && a.userId === currentUserId)
+    );
+  });
 
   constructor() {
     this.loadInitialAlerts();
@@ -30,7 +39,7 @@ export class AlertasService {
   }
 
   private loadInitialAlerts() {
-    // Default alerts (mocked for now, implies persistence later)
+    // Default alerts (GLOBAL)
     const defaults: AlertConfig[] = [
       {
         id: '1',
@@ -40,6 +49,8 @@ export class AlertasService {
         tipo: 'GENERAL',
         horaInicio: '16:00',
         activo: true,
+        isGlobal: true,    // <-- Global
+        userId: 'system',  // <-- System owned
         rootRule: {
           operator: 'AND',
           rules: [
@@ -52,13 +63,22 @@ export class AlertasService {
   }
 
   getAlerta(id: string): AlertConfig | undefined {
-    return this._alertas().find(a => a.id === id);
+    return this.alertas().find(a => a.id === id); // Use computed to restrict access
   }
 
-  addAlerta(alerta: Omit<AlertConfig, 'id'>) {
+  addAlerta(alerta: Omit<AlertConfig, 'id' | 'isGlobal' | 'userId'>) {
+    const currentUser = this.authService.currentUser();
+    
+    if (!currentUser) {
+      this.toast.error('Debes iniciar sesión para crear alertas');
+      return;
+    }
+
     const newAlerta: AlertConfig = {
       ...alerta,
-      id: crypto.randomUUID()
+      id: crypto.randomUUID(),
+      isGlobal: false,             // <-- Private by default
+      userId: currentUser.id       // <-- Assigned to creator
     };
     this._alertas.update(current => [...current, newAlerta]);
     this.toast.success('Alerta creada correctamente');
@@ -150,6 +170,41 @@ export class AlertasService {
         }
       }
     });
+  }
+
+  importAlerts(jsonString: string) {
+    const user = this.authService.currentUser();
+    if (!user) return;
+
+    try {
+      const imported = JSON.parse(jsonString);
+      if (Array.isArray(imported)) {
+         const newAlerts: AlertConfig[] = [];
+         const current = this._alertas();
+
+         imported.forEach((item: any) => {
+            // Basic validation
+            if (item.nombre && item.modulo && item.rootRule) {
+               // Assign new ID and ownership
+               newAlerts.push({
+                 ...item,
+                 id: crypto.randomUUID(),
+                 userId: user.id,
+                 isGlobal: false
+               });
+            }
+         });
+         
+         if (newAlerts.length > 0) {
+            this._alertas.update(curr => [...curr, ...newAlerts]);
+            this.toast.success(`Importadas ${newAlerts.length} alertas.`);
+         } else {
+            this.toast.info('No se encontraron alertas válidas.');
+         }
+      }
+    } catch (e) {
+      this.toast.error('Error al importar alertas.');
+    }
   }
 
   // gatherContext is deprecated/removed in favor of local context selection

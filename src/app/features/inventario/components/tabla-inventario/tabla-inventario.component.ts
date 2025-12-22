@@ -8,35 +8,35 @@ import { EquipoInventario } from '../../models';
   standalone: true,
   imports: [CommonModule, LucideAngularModule],
   template: `
-    <div class="overflow-x-auto bg-white rounded-lg shadow-sm border border-slate-200">
-      <table class="min-w-full divide-y divide-slate-200">
-        <thead class="bg-slate-50">
+    <div class="overflow-x-auto bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
+      <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
+        <thead class="bg-slate-50 dark:bg-slate-900">
           <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Serial</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Equipo</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Proyecto</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Usuario</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Estado</th>
-            <th class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase">Accesorios</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Serial</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Equipo</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Proyecto</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Usuario</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Estado</th>
+            <th class="px-6 py-3 text-center text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Accesorios</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-slate-200">
-          <tr *ngFor="let equipo of equipos" class="hover:bg-slate-50 cursor-pointer transition-colors" (click)="rowClick.emit(equipo)">
-            <td class="px-6 py-4 text-sm font-medium text-slate-900 group-hover:text-primary">{{ equipo.serial }}</td>
-            <td class="px-6 py-4 text-sm text-slate-600">
-              <div class="font-medium text-slate-900">{{ equipo.tipo }}</div>
-              <div class="text-xs text-slate-500">{{ equipo.marca }} {{ equipo.modelo }}</div>
+        <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
+          <tr *ngFor="let equipo of equipos" class="hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors" (click)="rowClick.emit(equipo)">
+            <td class="px-6 py-4 text-sm font-medium text-slate-900 dark:text-white group-hover:text-primary">{{ equipo.serial }}</td>
+            <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-300">
+              <div class="font-medium text-slate-900 dark:text-white">{{ equipo.tipo }}</div>
+              <div class="text-xs text-slate-500 dark:text-slate-400">{{ equipo.marca }} {{ equipo.modelo }}</div>
             </td>
-            <td class="px-6 py-4 text-sm text-slate-600">
-              <span *ngIf="equipo.proyecto" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+            <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-300">
+              <span *ngIf="equipo.proyecto" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
                 {{ equipo.proyecto }}
               </span>
               <span *ngIf="!equipo.proyecto" class="text-slate-400">-</span>
             </td>
-            <td class="px-6 py-4 text-sm text-slate-600">
+            <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-300">
               <div *ngIf="equipo.usuarioAsignado">
-                <div class="font-medium text-slate-900">{{ equipo.usuarioAsignado }}</div>
-                <div class="text-xs text-slate-500" *ngIf="equipo.fechaAsignacion">
+                <div class="font-medium text-slate-900 dark:text-white">{{ equipo.usuarioAsignado }}</div>
+                <div class="text-xs text-slate-500 dark:text-slate-400" *ngIf="equipo.fechaAsignacion">
                   Desde {{ equipo.fechaAsignacion | date:'shortDate' }}
                 </div>
               </div>

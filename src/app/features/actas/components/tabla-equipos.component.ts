@@ -12,9 +12,9 @@ import { EquipoActa } from '../models';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   template: `
-    <div class="bg-white p-4 rounded-lg border border-slate-200">
+    <div class="bg-white dark:bg-slate-800 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
       <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-semibold text-slate-900">Equipos</h3>
+        <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Equipos</h3>
         <button type="button" (click)="agregarEquipo()" 
           class="px-4 py-2 bg-accent text-white rounded-md hover:bg-blue-600 transition-colors text-sm font-medium">
           + Agregar Equipo
@@ -22,48 +22,48 @@ import { EquipoActa } from '../models';
       </div>
 
       <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-slate-200">
-          <thead class="bg-slate-50">
+        <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
+          <thead class="bg-slate-50 dark:bg-slate-900">
             <tr>
-              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Serial</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Proyecto</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Descripción</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Estado</th>
-              <th class="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase">Acciones</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Serial</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Proyecto</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Descripción</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Estado</th>
+              <th class="px-4 py-3 text-center text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Acciones</th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-slate-200" [formGroup]="parentForm">
+          <tbody class="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700" [formGroup]="parentForm">
             <tr *ngFor="let equipo of equiposArray.controls; let i = index" [formGroupName]="i">
               <td class="px-4 py-3">
                 <input type="text" formControlName="serial" 
-                  class="block w-full rounded-md border-slate-300 shadow-sm focus:border-accent focus:ring-accent sm:text-sm"
+                  class="block w-full rounded-md border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm focus:border-accent focus:ring-accent sm:text-sm placeholder-slate-400"
                   placeholder="SN123456">
               </td>
               <td class="px-4 py-3">
                 <input type="text" formControlName="proyecto" 
-                  class="block w-full rounded-md border-slate-300 shadow-sm focus:border-accent focus:ring-accent sm:text-sm"
+                  class="block w-full rounded-md border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm focus:border-accent focus:ring-accent sm:text-sm placeholder-slate-400"
                   placeholder="Proyecto X">
               </td>
               <td class="px-4 py-3">
-                <span class="text-sm text-slate-600">{{ equipo.get('descripcion')?.value || '-' }}</span>
+                <span class="text-sm text-slate-600 dark:text-slate-300">{{ equipo.get('descripcion')?.value || '-' }}</span>
               </td>
               <td class="px-4 py-3">
                 <span *ngIf="equipo.get('estado')?.value === 'VALIDO'" 
-                  class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                  class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                   Válido
                 </span>
                 <span *ngIf="equipo.get('estado')?.value === 'INVALIDO'" 
-                  class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                  class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
                   Inválido
                 </span>
                 <span *ngIf="!equipo.get('estado')?.value || equipo.get('estado')?.value === 'PENDIENTE'" 
-                  class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                  class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
                   Pendiente
                 </span>
               </td>
               <td class="px-4 py-3 text-center">
                 <button type="button" (click)="eliminarEquipo(i)" 
-                  class="text-danger hover:text-red-700 transition-colors">
+                  class="text-danger hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
                   </svg>
@@ -71,7 +71,7 @@ import { EquipoActa } from '../models';
               </td>
             </tr>
             <tr *ngIf="equiposArray.length === 0">
-              <td colspan="4" class="px-4 py-8 text-center text-slate-500 text-sm">
+              <td colspan="4" class="px-4 py-8 text-center text-slate-500 dark:text-slate-400 text-sm">
                 No hay equipos agregados. Haz clic en "Agregar Equipo" para comenzar.
               </td>
             </tr>

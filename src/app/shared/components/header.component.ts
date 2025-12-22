@@ -12,15 +12,15 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterLink],
   template: `
-    <header class="bg-white shadow-sm border-b border-slate-200 h-16 flex items-center justify-between px-6">
+    <header class="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-800 h-16 flex items-center justify-between px-6 transition-colors duration-300">
       <div class="flex items-center gap-4">
-        <div class="text-2xl font-bold text-primary">Inventario <span class="text-accent">Akpo</span></div>
+        <div class="text-2xl font-bold text-primary dark:text-white">Inventario <span class="text-accent">Akpo</span></div>
       </div>
       
       <div class="flex items-center gap-4" *ngIf="authService.currentUser() as user">
         <div class="text-sm text-right hidden sm:block">
-          <div class="font-medium text-slate-900">{{ user.name }}</div>
-          <div class="text-slate-500 text-xs">{{ user.email }}</div>
+          <div class="font-medium text-slate-900 dark:text-white">{{ user.name }}</div>
+          <div class="text-slate-500 dark:text-slate-400 text-xs">{{ user.email }}</div>
         </div>
         <button (click)="logout()" class="p-2 text-slate-400 hover:text-danger transition-colors" title="Logout">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

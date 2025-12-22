@@ -14,7 +14,7 @@ import { EquipoInventario, FiltrosInventario } from '../../models';
   template: `
     <div class="space-y-6">
       <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-slate-900">Consulta de Equipos</h1>
+        <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Consulta de Equipos</h1>
         <button (click)="exportarExcel()" 
           class="px-4 py-2 bg-success text-white rounded-md hover:bg-green-600 transition-colors text-sm font-medium flex items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -31,7 +31,7 @@ import { EquipoInventario, FiltrosInventario } from '../../models';
       </app-filtros-inventario>
 
       <div class="relative">
-        <div *ngIf="loading()" class="absolute inset-0 bg-white/50 z-10 flex items-center justify-center">
+        <div *ngIf="loading()" class="absolute inset-0 bg-white/50 dark:bg-slate-900/50 z-10 flex items-center justify-center">
           <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
         

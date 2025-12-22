@@ -18,26 +18,26 @@ import { TipoActa, CrearActaRequest } from '../../models';
   template: `
     <div class="space-y-6">
       <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-slate-900">Crear Acta</h1>
+        <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Crear Acta</h1>
       </div>
 
       <form [formGroup]="actaForm" (ngSubmit)="onSubmit()" class="space-y-6">
         <!-- Tipo de Acta -->
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-          <label class="block text-sm font-medium text-slate-700 mb-2">Tipo de Acta</label>
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+          <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Tipo de Acta</label>
           <select formControlName="tipoActa" 
-            class="block w-full rounded-md border-slate-300 shadow-sm focus:border-accent focus:ring-accent sm:text-sm">
+            class="block w-full rounded-md border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm focus:border-accent focus:ring-accent sm:text-sm">
             <option value="ASIGNACION">Asignación</option>
             <option value="DEVOLUCION">Devolución</option>
           </select>
         </div>
 
         <!-- Usuario Destino -->
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-          <label class="block text-sm font-medium text-slate-700 mb-2">Usuario Destino</label>
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+          <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Usuario Destino</label>
           <input type="text" formControlName="usuarioDestino" 
             (blur)="validarUsuarioDestino()"
-            class="block w-full rounded-md border-slate-300 shadow-sm focus:border-accent focus:ring-accent sm:text-sm"
+            class="block w-full rounded-md border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm focus:border-accent focus:ring-accent sm:text-sm placeholder-slate-400"
             placeholder="nombre.apellido">
           <div *ngIf="usuarioValidado()" class="mt-2 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-success" viewBox="0 0 20 20" fill="currentColor">
@@ -46,7 +46,7 @@ import { TipoActa, CrearActaRequest } from '../../models';
             <span class="text-sm text-success">{{ nombreCompletoUsuario() }}</span>
           </div>
           <div *ngIf="actaForm.get('usuarioDestino')?.touched && actaForm.get('usuarioDestino')?.invalid" 
-            class="mt-2 text-sm text-danger">
+            class="mt-2 text-sm text-danger dark:text-red-400">
             Usuario no válido o no encontrado
           </div>
         </div>
@@ -59,43 +59,43 @@ import { TipoActa, CrearActaRequest } from '../../models';
         </app-tabla-equipos>
 
         <!-- Periféricos -->
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100" formGroupName="perifericos">
-          <h3 class="text-lg font-semibold text-slate-900 mb-4">Periféricos</h3>
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700" formGroupName="perifericos">
+          <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Periféricos</h3>
           <div class="space-y-3">
             <label class="flex items-center gap-3">
               <input type="checkbox" formControlName="teclado" 
-                class="rounded border-slate-300 text-accent focus:ring-accent">
-              <span class="text-sm text-slate-700">Teclado</span>
+                class="rounded border-slate-300 dark:border-slate-600 text-accent focus:ring-accent bg-white dark:bg-slate-900">
+              <span class="text-sm text-slate-700 dark:text-slate-300">Teclado</span>
             </label>
             <label class="flex items-center gap-3">
               <input type="checkbox" formControlName="mouse" 
-                class="rounded border-slate-300 text-accent focus:ring-accent">
-              <span class="text-sm text-slate-700">Mouse</span>
+                class="rounded border-slate-300 dark:border-slate-600 text-accent focus:ring-accent bg-white dark:bg-slate-900">
+              <span class="text-sm text-slate-700 dark:text-slate-300">Mouse</span>
             </label>
             <label class="flex items-center gap-3">
               <input type="checkbox" formControlName="basePortatil" 
-                class="rounded border-slate-300 text-accent focus:ring-accent">
-              <span class="text-sm text-slate-700">Base Portátil</span>
+                class="rounded border-slate-300 dark:border-slate-600 text-accent focus:ring-accent bg-white dark:bg-slate-900">
+              <span class="text-sm text-slate-700 dark:text-slate-300">Base Portátil</span>
             </label>
             <div class="space-y-2">
               <label class="flex items-center gap-3">
                 <input type="checkbox" formControlName="diademaIncluido" 
-                  class="rounded border-slate-300 text-accent focus:ring-accent">
-                <span class="text-sm text-slate-700">Diadema</span>
+                  class="rounded border-slate-300 dark:border-slate-600 text-accent focus:ring-accent bg-white dark:bg-slate-900">
+                <span class="text-sm text-slate-700 dark:text-slate-300">Diadema</span>
               </label>
               <input *ngIf="actaForm.get('perifericos.diademaIncluido')?.value" 
                 type="text" formControlName="diademaSerial" 
-                class="ml-8 block w-full max-w-xs rounded-md border-slate-300 shadow-sm focus:border-accent focus:ring-accent sm:text-sm"
+                class="ml-8 block w-full max-w-xs rounded-md border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm focus:border-accent focus:ring-accent sm:text-sm placeholder-slate-400"
                 placeholder="Serial de diadema">
             </div>
           </div>
         </div>
 
         <!-- Ticket (Opcional) -->
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-          <label class="block text-sm font-medium text-slate-700 mb-2">Ticket (Opcional)</label>
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+          <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Ticket (Opcional)</label>
           <input type="number" formControlName="ticket" 
-            class="block w-full max-w-xs rounded-md border-slate-300 shadow-sm focus:border-accent focus:ring-accent sm:text-sm"
+            class="block w-full max-w-xs rounded-md border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm focus:border-accent focus:ring-accent sm:text-sm placeholder-slate-400"
             placeholder="Número de ticket">
         </div>
 
@@ -106,7 +106,7 @@ import { TipoActa, CrearActaRequest } from '../../models';
             Cancelar
           </button>
           <button type="submit" [disabled]="actaForm.invalid || isSubmitting()" 
-            class="px-6 py-2 bg-primary text-white rounded-md hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            class="px-6 py-2 bg-primary text-white rounded-md hover:bg-slate-800 dark:bg-blue-600 dark:hover:bg-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
             <span *ngIf="!isSubmitting()">Generar Acta</span>
             <span *ngIf="isSubmitting()" class="flex items-center gap-2">
               <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

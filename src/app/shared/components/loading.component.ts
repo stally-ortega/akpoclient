@@ -23,11 +23,11 @@ import { LoadingService } from '../../core/services/loading.service';
       </div>
 
       <!-- Lighthouse Container (Centered) -->
-      <div class="relative w-[300px] h-[300px] flex items-center justify-center z-30">
+      <div class="relative w-[300px] h-[300px] flex flex-col items-center justify-center z-30">
         
         <!-- SVG Lighthouse -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" 
-             class="w-full h-full text-sky-500 drop-shadow-[0_0_10px_rgba(56,189,248,0.3)]"
+             class="w-full h-full text-sky-500 drop-shadow-[0_0_10px_rgba(56,189,248,0.3)] mb-4"
              style="stroke-linecap: round; stroke-linejoin: round; fill: none;">
            
            <!-- Base Foundation -->
@@ -58,11 +58,13 @@ import { LoadingService } from '../../core/services/loading.service';
            <circle cx="50" cy="22" r="3" fill="white" stroke="none" class="lighthouse-bulb" />
         </svg>
 
+        <div class="text-white/80 font-mono text-sm tracking-widest animate-pulse">CARGANDO...</div>
+
       </div>
 
       <!-- Error Message -->
       <div *ngIf="loadingService.showError()" 
-           class="absolute bottom-10 z-50 left-0 right-0 mx-auto w-full max-w-md p-4 bg-red-900/90 border border-red-500 rounded-lg text-white text-center shadow-lg animate-bounce animate-duration-1000">
+           class="absolute bottom-10 z-[60] left-0 right-0 mx-auto w-full max-w-md p-4 bg-red-900/90 border border-red-500 rounded-lg text-white text-center shadow-lg animate-bounce animate-duration-1000">
         <p class="font-bold text-lg">⚠️ Ha ocurrido un error</p>
         <p class="text-sm opacity-90">El sistema está tardando demasiado. Por favor verifique la consola del navegador.</p>
       </div>

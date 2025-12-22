@@ -17,28 +17,29 @@ import { ActaPendiente, ActaHistorico } from '../../models';
   template: `
     <div class="space-y-6">
       <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-slate-900">Gestión de Actas</h1>
+        <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Gestión de Actas</h1>
         <div class="flex gap-3">
           <a routerLink="/actas/aprobar" 
             class="px-4 py-2 bg-success text-white rounded-md hover:bg-green-600 transition-colors text-sm font-medium">
             Aprobar con PDF
           </a>
           <a routerLink="/actas/crear" 
-            class="px-4 py-2 bg-primary text-white rounded-md hover:bg-slate-800 transition-colors text-sm font-medium">
+            class="px-4 py-2 bg-primary text-white rounded-md hover:bg-slate-800 dark:hover:bg-slate-700 transition-colors text-sm font-medium">
             + Nueva Acta
           </a>
         </div>
       </div>
 
       <!-- Tabs -->
-      <div class="border-b border-slate-200">
+      <div class="border-b border-slate-200 dark:border-slate-700">
         <nav class="-mb-px flex space-x-8">
           <button (click)="activeTab.set('pendientes')" 
             class="py-4 px-1 border-b-2 font-medium text-sm transition-colors"
             [class.border-accent]="activeTab() === 'pendientes'"
             [class.text-accent]="activeTab() === 'pendientes'"
             [class.border-transparent]="activeTab() !== 'pendientes'"
-            [class.text-slate-500]="activeTab() !== 'pendientes'">
+            [class.text-slate-500]="activeTab() !== 'pendientes'"
+            [class.dark:text-slate-400]="activeTab() !== 'pendientes'">
             Pendientes ({{ pendientes().length }})
           </button>
           <button (click)="activeTab.set('historico')" 
@@ -46,18 +47,19 @@ import { ActaPendiente, ActaHistorico } from '../../models';
             [class.border-accent]="activeTab() === 'historico'"
             [class.text-accent]="activeTab() === 'historico'"
             [class.border-transparent]="activeTab() !== 'historico'"
-            [class.text-slate-500]="activeTab() !== 'historico'">
+            [class.text-slate-500]="activeTab() !== 'historico'"
+            [class.dark:text-slate-400]="activeTab() !== 'historico'">
             Histórico
           </button>
         </nav>
       </div>
 
       <!-- Pendientes Tab -->
-      <div *ngIf="activeTab() === 'pendientes'" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-        <div class="p-4 border-b border-slate-100 flex justify-between items-center">
-          <h2 class="text-lg font-semibold text-slate-900">Solicitudes Pendientes</h2>
+      <div *ngIf="activeTab() === 'pendientes'" class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
+        <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-white dark:bg-slate-900">
+          <h2 class="text-lg font-semibold text-slate-900 dark:text-white">Solicitudes Pendientes</h2>
           <button (click)="cargarPendientes()" 
-            class="text-sm text-accent hover:text-blue-700 font-medium">
+            class="text-sm text-accent hover:text-blue-700 dark:hover:text-blue-400 font-medium">
             Actualizar
           </button>
         </div>
@@ -69,16 +71,16 @@ import { ActaPendiente, ActaHistorico } from '../../models';
       </div>
 
       <!-- Histórico Tab -->
-      <div *ngIf="activeTab() === 'historico'" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-        <div class="p-4 border-b border-slate-100 flex justify-between items-center">
-          <h2 class="text-lg font-semibold text-slate-900">Histórico de Actas</h2>
+      <div *ngIf="activeTab() === 'historico'" class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
+        <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-white dark:bg-slate-900">
+          <h2 class="text-lg font-semibold text-slate-900 dark:text-white">Histórico de Actas</h2>
           <div class="flex gap-3">
             <button (click)="exportarExcel()" 
               class="px-4 py-2 bg-success text-white rounded-md hover:bg-green-600 transition-colors text-sm font-medium">
               Exportar a Excel
             </button>
             <button (click)="cargarHistorico()" 
-              class="text-sm text-accent hover:text-blue-700 font-medium">
+              class="text-sm text-accent hover:text-blue-700 dark:hover:text-blue-400 font-medium">
               Actualizar
             </button>
           </div>

@@ -8,6 +8,7 @@ export interface RuleCondition {
   field: string;
   operator: Operator;
   value: any;
+  valueType?: 'LITERAL' | 'VARIABLE'; // Default 'LITERAL'
 }
 
 export interface RuleGroup {
@@ -29,6 +30,10 @@ export interface AlertConfig {
   target?: string;
   horaInicio: string;  // HH:mm for daily check
   activo: boolean;
+  
+  // Ownership
+  isGlobal: boolean;   // If true, applies to all users
+  userId?: string;     // ID of the owner (if private)
   
   // Logic
   rootRule: RuleGroup;

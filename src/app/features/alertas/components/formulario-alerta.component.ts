@@ -13,11 +13,11 @@ import { PRESTAMOS_FIELDS, INVENTARIO_FIELDS, ACTAS_FIELDS } from '../models/ale
   imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, RuleBuilderComponent],
   template: `
     <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" (click)="closeModal()">
-      <div class="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col" (click)="$event.stopPropagation()">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col" (click)="$event.stopPropagation()">
         <!-- Header -->
-        <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-          <h2 class="text-lg font-bold text-slate-800">Nueva Alerta</h2>
-          <button (click)="closeModal()" class="text-slate-400 hover:text-slate-600">
+        <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-900">
+          <h2 class="text-lg font-bold text-slate-800 dark:text-white">Nueva Alerta</h2>
+          <button (click)="closeModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
             <lucide-icon name="x" class="w-6 h-6"></lucide-icon>
           </button>
         </div>
@@ -28,22 +28,22 @@ import { PRESTAMOS_FIELDS, INVENTARIO_FIELDS, ACTAS_FIELDS } from '../models/ale
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <!-- Basic Info -->
               <div class="space-y-4">
-                 <h3 class="text-sm font-semibold text-slate-900 border-b pb-2">Información Básica</h3>
+                 <h3 class="text-sm font-semibold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-700 pb-2">Información Básica</h3>
                  
                  <div>
-                  <label class="block text-sm font-medium text-slate-700 mb-1">Nombre</label>
-                  <input type="text" formControlName="nombre" class="w-full rounded-lg border-slate-300 focus:ring-primary focus:border-primary" placeholder="Ej: Préstamos Vencidos">
+                  <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Nombre</label>
+                  <input type="text" formControlName="nombre" class="w-full rounded-lg border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-primary focus:border-primary placeholder-slate-400" placeholder="Ej: Préstamos Vencidos">
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-slate-700 mb-1">Mensaje</label>
-                  <input type="text" formControlName="mensaje" class="w-full rounded-lg border-slate-300 focus:ring-primary focus:border-primary" placeholder="Mensaje a mostrar...">
+                  <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Mensaje</label>
+                  <input type="text" formControlName="mensaje" class="w-full rounded-lg border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-primary focus:border-primary placeholder-slate-400" placeholder="Mensaje a mostrar...">
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                   <div>
-                      <label class="block text-sm font-medium text-slate-700 mb-1">Módulo</label>
-                      <select formControlName="modulo" class="w-full rounded-lg border-slate-300 bg-white">
+                      <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Módulo</label>
+                      <select formControlName="modulo" class="w-full rounded-lg border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-primary focus:border-primary">
                         <option value="PRESTAMOS">Préstamos</option>
                         <option value="INVENTARIO">Inventario</option>
                         <option value="ACTAS">Actas</option>
@@ -51,17 +51,17 @@ import { PRESTAMOS_FIELDS, INVENTARIO_FIELDS, ACTAS_FIELDS } from '../models/ale
                       </select>
                   </div>
                   <div>
-                      <label class="block text-sm font-medium text-slate-700 mb-1">Hora Inicio</label>
-                      <input type="time" formControlName="horaInicio" class="w-full rounded-lg border-slate-300">
+                      <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Hora Inicio</label>
+                      <input type="time" formControlName="horaInicio" class="w-full rounded-lg border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-primary focus:border-primary">
                   </div>
                 </div>
               </div>
 
               <!-- Rule Builder Area -->
               <div class="space-y-4">
-                <h3 class="text-sm font-semibold text-slate-900 border-b pb-2">Condiciones (Lógica)</h3>
+                <h3 class="text-sm font-semibold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-700 pb-2">Condiciones (Lógica)</h3>
                 
-                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 min-h-[300px]">
+                <div class="bg-gray-50 dark:bg-slate-900 p-4 rounded-lg border border-gray-200 dark:border-slate-700 min-h-[300px]">
                    <app-rule-builder 
                       [group]="rootRule()" 
                       [availableFields]="currentFields()"
@@ -71,23 +71,23 @@ import { PRESTAMOS_FIELDS, INVENTARIO_FIELDS, ACTAS_FIELDS } from '../models/ale
 
                <!-- Trigger Logic -->
                <div class="space-y-4">
-                  <h3 class="text-sm font-semibold text-slate-900 border-b pb-2">Lógica de Disparo (Cuantitativa)</h3>
-                  <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+                  <h3 class="text-sm font-semibold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-700 pb-2">Lógica de Disparo (Cuantitativa)</h3>
+                  <div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
                      <div class="flex items-center gap-2">
-                        <input type="checkbox" id="useTrigger" [formControl]="useTriggerControl" class="rounded border-slate-300 text-primary focus:ring-primary">
-                        <label for="useTrigger" class="text-sm font-medium text-slate-700">Validar Cantidad de Resultados</label>
+                        <input type="checkbox" id="useTrigger" [formControl]="useTriggerControl" class="rounded border-slate-300 dark:border-slate-600 text-primary focus:ring-primary bg-white dark:bg-slate-900">
+                        <label for="useTrigger" class="text-sm font-medium text-slate-700 dark:text-slate-300">Validar Cantidad de Resultados</label>
                      </div>
 
                      <div class="flex items-center gap-2" *ngIf="useTriggerControl.value">
-                        <span class="text-sm text-slate-600">Disparar si conteo es</span>
-                        <select formControlName="triggerOperator" class="rounded-lg border-slate-300 text-sm">
+                        <span class="text-sm text-slate-600 dark:text-slate-400">Disparar si conteo es</span>
+                        <select formControlName="triggerOperator" class="rounded-lg border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm">
                            <option value="GT">Mayor que (>)</option>
                            <option value="GTE">Mayor o igual (>=)</option>
                            <option value="LT">Menor que (<)</option>
                            <option value="LTE">Menor o igual (<=)</option>
                            <option value="EQ">Igual a (=)</option>
                         </select>
-                        <input type="number" formControlName="triggerValue" class="w-20 rounded-lg border-slate-300 text-sm" placeholder="0">
+                        <input type="number" formControlName="triggerValue" class="w-20 rounded-lg border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm" placeholder="0">
                      </div>
                      <div *ngIf="!useTriggerControl.value" class="text-xs text-slate-400 italic">
                         (Por defecto: Dispara si existe al menos 1 resultado)
@@ -97,9 +97,9 @@ import { PRESTAMOS_FIELDS, INVENTARIO_FIELDS, ACTAS_FIELDS } from '../models/ale
               </div>
             </div>
 
-            <div class="pt-4 flex justify-end gap-3 border-t">
-              <button type="button" (click)="closeModal()" class="px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 rounded-lg border border-slate-200">Cancelar</button>
-              <button type="submit" [disabled]="alertaForm.invalid" class="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-slate-800 rounded-lg disabled:opacity-50">Guardar Alerta</button>
+            <div class="pt-4 flex justify-end gap-3 border-t border-slate-200 dark:border-slate-700">
+              <button type="button" (click)="closeModal()" class="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600">Cancelar</button>
+              <button type="submit" [disabled]="alertaForm.invalid" class="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-slate-800 dark:hover:bg-slate-700 rounded-lg disabled:opacity-50">Guardar Alerta</button>
             </div>
           </form>
         </div>
@@ -111,7 +111,7 @@ import { PRESTAMOS_FIELDS, INVENTARIO_FIELDS, ACTAS_FIELDS } from '../models/ale
 
 export class FormularioAlertaComponent {
   @Output() close = new EventEmitter<void>();
-  @Output() save = new EventEmitter<Omit<AlertConfig, 'id'>>();
+  @Output() save = new EventEmitter<Omit<AlertConfig, 'id' | 'isGlobal' | 'userId'>>();
 
   private fb = inject(FormBuilder);
 
