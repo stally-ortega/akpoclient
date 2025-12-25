@@ -1,11 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from './shared/components/header.component';
-import { SidebarComponent } from './shared/components/sidebar.component';
-import { AuthService } from './core/services/auth.service';
-import { LoadingComponent } from './shared/components/loading.component';
-import { LoadingService } from './core/services/loading.service';
+import { HeaderComponent, SidebarComponent, LoadingComponent } from '@shared';
+import { AuthService, LoadingService } from '@core';
+import { PreferenciasService } from './features/preferencias/services/preferencias.service';
 import { OnInit } from '@angular/core';
 
 /**
@@ -40,6 +38,7 @@ import { OnInit } from '@angular/core';
 export class AppComponent implements OnInit {
   authService = inject(AuthService);
   private loadingService = inject(LoadingService);
+  private prefs = inject(PreferenciasService); // Ensure service initializes
 
   ngOnInit() {
     // Show splash screen on initial load

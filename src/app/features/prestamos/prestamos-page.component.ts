@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
@@ -11,6 +11,7 @@ import { Prestamo } from './models/prestamo.models';
   selector: 'app-prestamos-page',
   standalone: true,
   imports: [CommonModule, FormsModule, LucideAngularModule, FormularioPrestamoComponent, DetallePrestamoComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-6">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -154,11 +155,13 @@ export class PrestamosPageComponent {
     this.prestamosService.searchTerm.set(term);
   }
 
-  updateStartDate(e: any) {
-    this.prestamosService.filterStartDate.set(e.target.value);
+  updateStartDate(e: Event) {
+    const val = (e.target as HTMLInputElement).value;
+    this.prestamosService.filterStartDate.set(val);
   }
 
-  updateEndDate(e: any) {
-    this.prestamosService.filterEndDate.set(e.target.value);
+  updateEndDate(e: Event) {
+    const val = (e.target as HTMLInputElement).value;
+    this.prestamosService.filterEndDate.set(val);
   }
 }

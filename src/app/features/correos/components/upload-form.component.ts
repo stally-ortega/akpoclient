@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CorreosRequest } from '../models/correos.models';
@@ -11,6 +11,7 @@ import { CorreosRequest } from '../models/correos.models';
   selector: 'app-upload-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
       <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Nuevo Proceso de Envío</h3>

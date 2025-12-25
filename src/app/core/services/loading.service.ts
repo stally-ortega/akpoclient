@@ -8,7 +8,7 @@ export class LoadingService {
   private _showError = signal<boolean>(false);
   
   // Timeout reference
-  private timeoutRef: any;
+  private timeoutRef: any; // Using any to support Node/Browser timer types compatible with Angular
   private readonly TIMEOUT_MS = 10000; // 10 seconds before showing error
 
   isLoading = computed(() => this._loading());

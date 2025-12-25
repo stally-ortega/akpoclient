@@ -1,14 +1,24 @@
 import { Injectable, signal, computed, inject, effect } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { UserVariable } from '../models/preferencias.models';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
+/**
+ * Service for managing user preferences and global variables.
+ * Handles theme persistence and custom environment variables.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class PreferenciasService {
   private authService = inject(AuthService);
   private toast = inject(ToastrService);
+  private http = inject(HttpClient);
+  private readonly API_URL = `${environment.baseUrl}/preferences`;
 
   // --- VARIABLES STATE ---
   private _variables = signal<UserVariable[]>([]);
@@ -25,9 +35,6 @@ export class PreferenciasService {
   public theme = computed(() => this._theme());
 
   constructor() {
-    // Load initial state
-    this.loadState();
-
     // Effect to apply theme whenever it changes
     effect(() => {
       const theme = this._theme();
@@ -46,51 +53,48 @@ export class PreferenciasService {
       } else {
         // Reset defaults if no user
         this._theme.set('light');
+        this._variables.set([]);
       }
     }, { allowSignalWrites: true });
   }
 
   // --- PERSISTENCE & LOAD ---
 
-  private loadState() {
-    // Load "Global" storage if needed, but really we rely on the effect triggered by Auth
-    const savedGlobalVariables = localStorage.getItem('akpo_global_vars'); 
-    if (savedGlobalVariables) {
-      // Logic for global variables could go here if implemented
+  private loadUserPreferences(userId: string) {
+    if (environment.useMocks) {
+      this.loadMockPreferences(userId);
+      return;
     }
+
+    this.http.get<{ theme: 'light' | 'dark', variables: UserVariable[] }>(`${this.API_URL}/${userId}`)
+      .pipe(
+        catchError(err => {
+          console.error('Error loading preferences', err);
+          return of<{ theme: 'light' | 'dark', variables: UserVariable[] }>({ theme: 'light', variables: [] });
+        })
+      )
+      .subscribe((data: { theme: 'light' | 'dark', variables: UserVariable[] }) => {
+        this._theme.set(data.theme || 'light');
+        this._variables.set(data.variables || []);
+      });
   }
 
-  private loadUserPreferences(userId: string) {
-    // Theme
-    const savedTheme = localStorage.getItem(`prefs_${userId}_theme`) as 'light' | 'dark';
-    if (savedTheme) {
+  private loadMockPreferences(userId: string) {
+    // Mock simulation keeping localStorage as "DB" for mocks
+    const savedTheme = localStorage.getItem(this.getThemeKey(userId));
+    if (savedTheme === 'dark' || savedTheme === 'light') {
       this._theme.set(savedTheme);
     }
 
-    // Variables
-    const savedVars = localStorage.getItem(`prefs_${userId}_vars`);
+    const savedVars = localStorage.getItem(this.getVarsKey(userId));
     if (savedVars) {
       try {
         const parsed = JSON.parse(savedVars);
-        // Merge with existing state (avoiding duplicates if logic requires)
-        // For now, we will replace the slice for this user in the signal
-        // BUT since the signal holds ALL users' vars (simulated backend), we need to be careful.
-        // SIMULATION: We just load from localStorage "DB" into the main array
-        // Since we don't have a real DB, let's treat localStorage key as the source of truth for THIS user.
-        
-        // Remove old vars for this user from current state to avoid dups
-        const currentWithoutUser = this._variables().filter(v => v.userId !== userId);
-        this._variables.set([...currentWithoutUser, ...parsed]);
-        
+        this._variables.set(parsed);
       } catch (e) {
         console.error('Error loading variables', e);
       }
     }
-  }
-
-  private saveUserVariables(userId: string) {
-    const vars = this._variables().filter(v => v.userId === userId);
-    localStorage.setItem(`prefs_${userId}_vars`, JSON.stringify(vars));
   }
 
   // --- THEME METHODS ---
@@ -101,15 +105,24 @@ export class PreferenciasService {
   }
 
   setTheme(theme: 'light' | 'dark') {
+    // Optimistic Update
     this._theme.set(theme);
     const user = this.authService.currentUser();
+    
     if (user) {
-      localStorage.setItem(`prefs_${user.id}_theme`, theme);
+      if (environment.useMocks) {
+         localStorage.setItem(this.getThemeKey(user.id), theme);
+      } else {
+         this.http.put(`${this.API_URL}/${user.id}/theme`, { theme }).subscribe();
+      }
     }
   }
 
   // --- VARIABLES CRUD ---
 
+  /**
+   * Adds a new custom variable for the current user.
+   */
   addVariable(variable: Omit<UserVariable, 'id' | 'userId'>) {
     const user = this.authService.currentUser();
     if (!user) return;
@@ -120,33 +133,86 @@ export class PreferenciasService {
       userId: user.id
     };
 
+    // Optimistic UI
     this._variables.update(current => [...current, newVar]);
-    this.saveUserVariables(user.id);
     this.toast.success('Variable creada');
+
+    if (environment.useMocks) {
+      this.saveMockVariables(user.id);
+    } else {
+      this.http.post(`${this.API_URL}/${user.id}/variables`, newVar)
+        .pipe(catchError(() => {
+          // Rollback on error
+          this._variables.update(current => current.filter(v => v.id !== newVar.id));
+          this.toast.error('Error al guardar variable');
+          return of(null);
+        }))
+        .subscribe();
+    }
   }
 
   deleteVariable(id: string) {
     const user = this.authService.currentUser();
     if (!user) return;
 
+    // Snapshot for rollback
+    const previousVars = this._variables();
+
+    // Optimistic UI
     this._variables.update(current => current.filter(v => v.id !== id));
-    this.saveUserVariables(user.id);
     this.toast.info('Variable eliminada');
+
+    if (environment.useMocks) {
+      this.saveMockVariables(user.id);
+    } else {
+      this.http.delete(`${this.API_URL}/${user.id}/variables/${id}`)
+        .pipe(catchError(() => {
+           // Rollback
+           this._variables.set(previousVars);
+           this.toast.error('Error al eliminar variable');
+           return of(null);
+        }))
+        .subscribe();
+    }
   }
 
   updateVariable(id: string, value: any) {
     const user = this.authService.currentUser();
     if (!user) return;
 
+    // Snapshot
+    const previousVars = this._variables();
+
+    // Optimistic UI
     this._variables.update(current => 
       current.map(v => v.id === id ? { ...v, value } : v)
     );
-    this.saveUserVariables(user.id);
     this.toast.success('Variable actualizada');
+
+    if (environment.useMocks) {
+       this.saveMockVariables(user.id);
+    } else {
+       this.http.put(`${this.API_URL}/${user.id}/variables/${id}`, { value })
+       .pipe(catchError(() => {
+          // Rollback
+          this._variables.set(previousVars);
+          this.toast.error('Error al actualizar variable');
+          return of(null);
+       }))
+       .subscribe();
+    }
+  }
+
+  private saveMockVariables(userId: string) {
+    const vars = this._variables().filter(v => v.userId === userId);
+    localStorage.setItem(this.getVarsKey(userId), JSON.stringify(vars));
   }
 
   // --- EXPORT / IMPORT SUPPORT ---
   
+  /**
+   * Exports user preferences (theme and variables) to a JSON string.
+   */
   exportData() {
      const user = this.authService.currentUser();
      if (!user) return null;
@@ -165,29 +231,40 @@ export class PreferenciasService {
     try {
       const data = JSON.parse(jsonString);
       
-      // Import Theme
+      // Import Theme (Sync with Backend)
       if (data.theme) this.setTheme(data.theme);
 
       // Import Variables
       if (Array.isArray(data.variables)) {
-        // Strategy: Overwrite or Append? Let's Append but check for key collisions
         const currentVars = this.userVariables();
         const newVars: UserVariable[] = [];
 
         data.variables.forEach((importedVar: any) => {
-           // Skip if key already exists? Or update? Let's skip to be safe.
            if (!currentVars.some(v => v.key === importedVar.key)) {
               newVars.push({
                 ...importedVar,
-                id: crypto.randomUUID(), // New ID
-                userId: user.id          // Re-assign ownership
+                id: crypto.randomUUID(), 
+                userId: user.id          
               });
            }
         });
 
         if (newVars.length > 0) {
+           // Batch add locally
            this._variables.update(current => [...current, ...newVars]);
-           this.saveUserVariables(user.id);
+           
+           // Persist
+           if (environment.useMocks) {
+              this.saveMockVariables(user.id);
+           } else {
+              // Usually backend handles batch import, or we loop calls. 
+              // For simplicity, let's assume a batch endpoint or loop.
+              // Looping for now to ensure consistency with CRUD Ops
+              newVars.forEach(v => {
+                 this.http.post(`${this.API_URL}/${user.id}/variables`, v).subscribe();
+              });
+           }
+           
            this.toast.success(`Importadas ${newVars.length} variables.`);
         } else {
            this.toast.info('No se encontraron nuevas variables para importar.');
@@ -198,8 +275,22 @@ export class PreferenciasService {
     }
   }
 
+  // --- HELPERS ---
+
+  private getThemeKey(userId: string): string {
+    return `prefs_${userId}_theme`;
+  }
+
+  private getVarsKey(userId: string): string {
+    return `prefs_${userId}_vars`;
+  }
+
   // Helper for Rules Engine
-  resolveValue(value: any, valueType?: 'LITERAL' | 'VARIABLE'): any {
+  /**
+   * Resolves a value for the Rule Engine.
+   * If valueType is VARIABLE, it looks up the value in the user's variables.
+   */
+  resolveValue(value: unknown, valueType?: 'LITERAL' | 'VARIABLE'): unknown {
     if (valueType === 'VARIABLE') {
       // Value is the KEY of the variable
       const found = this.userVariables().find(v => v.key === value);

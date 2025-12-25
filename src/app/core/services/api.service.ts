@@ -30,7 +30,7 @@ export class ApiService {
    * @param body The request body.
    * @returns Observable of the response.
    */
-  post<T>(path: string, body: any): Observable<T> {
+  post<T>(path: string, body: unknown): Observable<T> {
     return this.http.post<T>(`${this.API_URL}${path}`, body);
   }
 
@@ -40,7 +40,7 @@ export class ApiService {
    * @param body The request body.
    * @returns Observable of the response.
    */
-  put<T>(path: string, body: any): Observable<T> {
+  put<T>(path: string, body: unknown): Observable<T> {
     return this.http.put<T>(`${this.API_URL}${path}`, body);
   }
 

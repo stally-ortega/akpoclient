@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -11,6 +11,7 @@ import { EquipoInventario, FiltrosInventario } from '../../models';
   selector: 'app-consulta-equipos',
   standalone: true,
   imports: [CommonModule, FiltrosInventarioComponent, TablaInventarioComponent, DetalleEquipoComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-6">
       <div class="flex items-center justify-between">

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '@core/services/auth.service';
 import { RouterLink } from '@angular/router';
@@ -11,10 +11,13 @@ import { RouterLink } from '@angular/router';
   selector: 'app-header',
   standalone: true,
   imports: [CommonModule, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <header class="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-800 h-16 flex items-center justify-between px-6 transition-colors duration-300">
       <div class="flex items-center gap-4">
-        <div class="text-2xl font-bold text-primary dark:text-white">Inventario <span class="text-accent">Akpo</span></div>
+        <a routerLink="/dashboard" class="text-2xl font-bold text-primary dark:text-white cursor-pointer hover:opacity-80 transition-opacity no-underline">
+            Inventario <span class="text-accent">Akpo</span>
+        </a>
       </div>
       
       <div class="flex items-center gap-4" *ngIf="authService.currentUser() as user">

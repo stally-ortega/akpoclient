@@ -1,11 +1,16 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoadingService } from '../../core/services/loading.service';
 
+/**
+ * Global loading overlay component.
+ * Displays a lighthouse animation when the application is busy.
+ */
 @Component({
   selector: 'app-loading',
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div *ngIf="loadingService.isLoading()" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/95 backdrop-blur-sm transition-opacity duration-300 overflow-hidden perspective-container">
       

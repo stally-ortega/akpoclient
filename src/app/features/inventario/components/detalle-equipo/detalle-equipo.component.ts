@@ -1,4 +1,4 @@
-import { Component, inject, Input, computed, signal, Output, EventEmitter } from '@angular/core';
+import { Component, inject, Input, computed, signal, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
 import { EquipoInventario, HistorialAsignacion } from '../../models';
@@ -8,6 +8,7 @@ import { InventarioService } from '../../services/inventario.service';
   selector: 'app-detalle-equipo',
   standalone: true,
   imports: [CommonModule, LucideAngularModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" (click)="close()">
       <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col" (click)="$event.stopPropagation()">
@@ -208,8 +209,14 @@ export class DetalleEquipoComponent {
   }
 
   // Hook into tab change
-  updateStartDate(e: any) { this.filterStart.set(new Date(e.target.value)); }
-  updateEndDate(e: any) { this.filterEnd.set(new Date(e.target.value)); }
+  updateStartDate(e: Event) { 
+    const val = (e.target as HTMLInputElement).value;
+    this.filterStart.set(new Date(val)); 
+  }
+  updateEndDate(e: Event) { 
+    const val = (e.target as HTMLInputElement).value;
+    this.filterEnd.set(new Date(val)); 
+  }
 
   close() {
     this.closed.emit();

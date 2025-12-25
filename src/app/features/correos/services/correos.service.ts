@@ -4,6 +4,10 @@ import { Observable, interval, switchMap, takeWhile, map, catchError, of, delay 
 import { environment } from '../../../../environments/environment';
 import { CorreosRequest, CorreosResponse, CorreosResult } from '../models/correos.models';
 
+/**
+ * Service for managing bulk email processes.
+ * Handles file uploads, progress polling, and result tracking.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -22,6 +26,11 @@ export class CorreosService {
   public currentStatus = this._currentStatus.asReadonly();
   public progress = this._progress.asReadonly();
 
+  /**
+   * Starts a new bulk email process by uploading a file.
+   * @param request The upload request containing the file and configuration.
+   * @returns Observable of the server response including the process ID.
+   */
   startProcess(request: CorreosRequest): Observable<CorreosResponse> {
     this._isProcessing.set(true);
     this._progress.set(0);
@@ -42,6 +51,12 @@ export class CorreosService {
     return this.http.post<CorreosResponse>(`${this.API_URL}/correos/upload`, formData);
   }
 
+  /**
+   * Polls the server for processing results.
+   * Updates progress signals automatically.
+   * @param processId The ID of the process to monitor.
+   * @returns Observable of the current results list.
+   */
   pollResults(processId: string): Observable<CorreosResult[]> {
     return interval(2000).pipe(
       map(i => {

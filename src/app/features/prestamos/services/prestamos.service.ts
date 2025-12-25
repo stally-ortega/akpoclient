@@ -7,6 +7,10 @@ import { interval } from 'rxjs';
 import * as XLSX from 'xlsx';
 import { environment } from '../../../../environments/environment';
 
+/**
+ * Service for managing loans (prestamos) of equipment and peripherals.
+ * Handles state management, API interactions, and export functionality.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -66,6 +70,12 @@ export class PrestamosService {
   constructor() {
   }
 
+  /**
+   * Registers a new loan.
+   * @param usuario The username requesting the loan.
+   * @param items List of items being borrowed.
+   * @param observaciones Optional notes.
+   */
   registrarPrestamo(usuario: string, items: ItemPrestamo[], observaciones?: string) {
     const nuevoPrestamo: Prestamo = {
       id: crypto.randomUUID(),
@@ -89,6 +99,10 @@ export class PrestamosService {
     this.toast.success('Préstamo registrado correctamente');
   }
 
+  /**
+   * Finalizes a loan, marking it as returned.
+   * @param id The ID of the loan to finalize.
+   */
   finalizarPrestamo(id: string) {
     this._prestamos.update(current => 
       current.map(p => {
@@ -107,6 +121,10 @@ export class PrestamosService {
     this.toast.info('Préstamo finalizado');
   }
 
+  /**
+   * Exports the filtered list of loans to an Excel file.
+   * Uses client-side generation for mocks and server-side otherwise.
+   */
   exportarExcel() {
     // Logic for Mocks (Client-side generation)
     if (environment.useMocks) {

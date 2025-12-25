@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UploadFormComponent } from './components/upload-form.component';
 import { ResultsTableComponent } from './components/results-table.component';
@@ -15,6 +15,7 @@ import { ToastrService } from 'ngx-toastr';
   selector: 'app-correos-page',
   standalone: true,
   imports: [CommonModule, UploadFormComponent, ResultsTableComponent, ProcessingStatusComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-6">
       <div class="flex items-center justify-between">

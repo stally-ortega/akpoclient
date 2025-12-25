@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EstadoEquipo, FiltrosInventario } from '../../models';
@@ -7,6 +7,7 @@ import { EstadoEquipo, FiltrosInventario } from '../../models';
   selector: 'app-filtros-inventario',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 mb-6">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">

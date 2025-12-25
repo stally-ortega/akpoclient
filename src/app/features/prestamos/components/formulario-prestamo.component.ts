@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, inject, signal } from '@angular/core';
+import { Component, EventEmitter, Output, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
   selector: 'app-formulario-prestamo',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, LucideAngularModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" (click)="closeModal()">
       <div class="bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-lg overflow-hidden" (click)="$event.stopPropagation()">
@@ -52,7 +53,7 @@ import { ToastrService } from 'ngx-toastr';
           
           <div class="pt-4 flex justify-end gap-3">
             <button type="button" (click)="closeModal()" class="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600">Cancelar</button>
-            <button type="submit" [disabled]="prestamoForm.invalid" class="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-slate-800 dark:hover:bg-slate-700 rounded-lg disabled:opacity-50">Registrar Préstamo</button>
+            <button type="submit" [disabled]="prestamoForm.invalid" class="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-slate-800 dark:bg-blue-500 dark:hover:bg-blue-400 rounded-lg disabled:opacity-50">Registrar Préstamo</button>
           </div>
         </form>
       </div>

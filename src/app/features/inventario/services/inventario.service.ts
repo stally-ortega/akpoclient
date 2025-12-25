@@ -65,6 +65,13 @@ export class InventarioService {
     }
   ];
 
+  /**
+   * Retrieves a list of equipment based on the provided filters.
+   * Utilizes mock data if defined, otherwise calls the API.
+   * 
+   * @param filtros - Search criteria (project, state, search term).
+   * @returns Observable of filtered `EquipoInventario[]`.
+   */
   consultarInventario(filtros: FiltrosInventario): Observable<EquipoInventario[]> {
     if (environment.useMocks) {
       return of(this.aplicarFiltrosMock(filtros)).pipe(delay(800));
@@ -86,6 +93,12 @@ export class InventarioService {
     return this.http.get<string[]>(`${this.apiUrl}/proyectos`);
   }
 
+  /**
+   * Retrieves the partial assignment history for an asset.
+   * @param serial - The unique serial number.
+   * @param fechaInicio - Start date filter.
+   * @param fechaFin - End date filter.
+   */
   obtenerHistorial(serial: string, fechaInicio?: Date, fechaFin?: Date): Observable<HistorialAsignacion[]> {
     if (environment.useMocks) {
       // Mock history
@@ -122,9 +135,9 @@ export class InventarioService {
       return of(filtered).pipe(delay(800));
     }
     
-    let params: any = {};
-    if (fechaInicio) params.inicio = fechaInicio.toISOString();
-    if (fechaFin) params.fin = fechaFin.toISOString();
+    const params: Record<string, string> = {};
+    if (fechaInicio) params['inicio'] = fechaInicio.toISOString();
+    if (fechaFin) params['fin'] = fechaFin.toISOString();
 
     return this.http.get<HistorialAsignacion[]>(`${this.apiUrl}/${serial}/historial`, { params });
   }

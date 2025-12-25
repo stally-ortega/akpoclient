@@ -2,6 +2,10 @@ import { Injectable, inject } from '@angular/core';
 import { RuleGroup, RuleCondition, Operator } from '../models/alertas.models';
 import { PreferenciasService } from '../../preferencias/services/preferencias.service';
 
+/**
+ * Service for evaluating logical rules against data contexts.
+ * Supports scalar values (Object) and collections (Array).
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -9,17 +13,17 @@ export class RuleEvaluatorService {
   private prefs = inject(PreferenciasService);
 
   /**
-   * Evaluates a rule against a context.
-   * - If context is an Array, checks if ANY item matches the simplified rule (Collection Mode).
-   * - If context is an Object, checks properties directly (Scalar Mode).
+   * Evaluates a rule node (Group or Condition) against a context.
+   * - If context is an Array, returns true if ANY item matches (OR logic across collection).
+   * - If context is an Object, evaluates directly against its properties.
+   * @param node The rule or group to evaluate.
+   * @param context The data context (single object or array of objects).
    */
-  evaluate(node: RuleGroup | RuleCondition, context: any | any[]): boolean {
+  evaluate(node: RuleGroup | RuleCondition, context: unknown): boolean {
     if (this.isGroup(node)) {
       return this.evaluateGroup(node, context);
     } else {
-      // Determine if we are in "Collection Mode" (Context is Array) or "Scalar Mode"
       if (Array.isArray(context)) {
-        // COLLECTION FILTERING: "Find ANY match in the array"
         return context.some(item => this.evaluateCondition(node, item));
       } else {
         return this.evaluateCondition(node, context);
@@ -27,16 +31,21 @@ export class RuleEvaluatorService {
     }
   }
 
-  findAllMatches(node: RuleGroup, context: any[]): any[] {
-     // Return subsets that match
+  /**
+   * Finds all items in a collection that match the given rule group.
+   * @param node The rule group to evaluate.
+   * @param context The array of items to filter.
+   * @returns Array of matching items.
+   */
+  findAllMatches(node: RuleGroup, context: unknown[]): unknown[] {
      return context.filter(item => this.evaluateGroup(node, item));
   }
 
-  private isGroup(node: any): node is RuleGroup {
-    return 'rules' in node;
+  private isGroup(node: unknown): node is RuleGroup {
+    return typeof node === 'object' && node !== null && 'rules' in node;
   }
 
-  private evaluateGroup(group: RuleGroup, context: any): boolean {
+  private evaluateGroup(group: RuleGroup, context: unknown): boolean {
     const results = group.rules.map(rule => this.evaluate(rule, context));
     
     if (group.operator === 'AND') {
@@ -46,7 +55,7 @@ export class RuleEvaluatorService {
     }
   }
 
-  private evaluateCondition(condition: RuleCondition, context: any): boolean {
+  private evaluateCondition(condition: RuleCondition, context: unknown): boolean {
     const itemValue = this.getValueFromPath(context, condition.field);
     
     // Resolve Target Value (Literal vs Variable)
@@ -65,8 +74,14 @@ export class RuleEvaluatorService {
     }
   }
 
-  private getValueFromPath(context: any, path: string): any {
-    if (!context) return null;
-    return path.split('.').reduce((obj, key) => obj?.[key], context);
+  private getValueFromPath(context: unknown, path: string): unknown {
+    if (!context || typeof context !== 'object') return null;
+    
+    return path.split('.').reduce((obj, key) => {
+      if (obj && typeof obj === 'object' && key in obj) {
+        return (obj as Record<string, unknown>)[key];
+      }
+      return null;
+    }, context as Record<string, unknown> | null | unknown);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
@@ -9,6 +9,7 @@ import { PreferenciasService } from '../../preferencias/services/preferencias.se
   selector: 'app-rule-builder',
   standalone: true,
   imports: [CommonModule, FormsModule, LucideAngularModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="border-l-2 border-slate-200 pl-4 py-2 space-y-3">
       <!-- Group Header -->
@@ -116,15 +117,15 @@ export class RuleBuilderComponent {
   
   public prefs = inject(PreferenciasService);
 
-  isGroup(node: any): boolean {
-    return 'rules' in node && 'operator' in node;
+  isGroup(node: unknown): boolean {
+    return typeof node === 'object' && node !== null && 'rules' in node && 'operator' in node;
   }
 
-  castGroup(node: any): RuleGroup {
+  castGroup(node: unknown): RuleGroup {
     return node as RuleGroup;
   }
 
-  castCondition(node: any): RuleCondition {
+  castCondition(node: unknown): RuleCondition {
     return node as RuleCondition;
   }
 

@@ -6,8 +6,14 @@
             "@app/*": [
                 "src/app/*"
             ],
+            "@core": [
+                "src/app/core/index.ts"
+            ],
             "@core/*": [
                 "src/app/core/*"
+            ],
+            "@shared": [
+                "src/app/shared/index.ts"
             ],
             "@shared/*": [
                 "src/app/shared/*"

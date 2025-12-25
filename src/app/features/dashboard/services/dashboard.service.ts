@@ -30,6 +30,10 @@ export interface DashboardStats {
   };
 }
 
+/**
+ * Service for retrieving aggregated dashboard statistics.
+ * Consolidates data from Inventory, Actas, Correos, and Prestamos.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -37,6 +41,10 @@ export class DashboardService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.baseUrl}/dashboard/stats`;
 
+  /**
+   * Retrieves the aggregated statistics for the dashboard.
+   * @returns Observable of DashboardStats.
+   */
   getStats(): Observable<DashboardStats> {
     if (environment.useMocks) {
       return of({

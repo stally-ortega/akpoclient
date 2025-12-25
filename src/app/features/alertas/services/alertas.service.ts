@@ -9,6 +9,10 @@ import { AuthService } from '../../../core/services/auth.service';
 
 import { RuleEvaluatorService } from './rule-evaluator.service';
 
+/**
+ * Service for managing system alerts and monitoring logic.
+ * Handles CRUD operations, state management, and periodic evaluation of rules.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -66,6 +70,10 @@ export class AlertasService {
     return this.alertas().find(a => a.id === id); // Use computed to restrict access
   }
 
+  /**
+   * Creates a new private alert for the current user.
+   * @param alerta The alert configuration (excluding ID and ownership metadata).
+   */
   addAlerta(alerta: Omit<AlertConfig, 'id' | 'isGlobal' | 'userId'>) {
     const currentUser = this.authService.currentUser();
     
@@ -84,6 +92,11 @@ export class AlertasService {
     this.toast.success('Alerta creada correctamente');
   }
 
+  /**
+   * Updates an existing alert.
+   * @param id The ID of the alert to update.
+   * @param updates Partial configuration to apply.
+   */
   updateAlerta(id: string, updates: Partial<AlertConfig>) {
     this._alertas.update(current => 
       current.map(a => a.id === id ? { ...a, ...updates } : a)
@@ -91,11 +104,19 @@ export class AlertasService {
     this.toast.info('Alerta actualizada');
   }
 
+  /**
+   * Deletes an alert by ID.
+   * @param id The ID of the alert to delete.
+   */
   deleteAlerta(id: string) {
     this._alertas.update(current => current.filter(a => a.id !== id));
     this.toast.info('Alerta eliminada');
   }
 
+  /**
+   * Toggles the active status of an alert.
+   * @param id The ID of the alert.
+   */
   toggleAlerta(id: string) {
     this._alertas.update(current => 
       current.map(a => a.id === id ? { ...a, activo: !a.activo } : a)
@@ -108,6 +129,10 @@ export class AlertasService {
     interval(60000).subscribe(() => this.checkAlerts());
   }
 
+  /**
+   * Periodically checks all active alerts against their start time and conditions.
+   * This is triggered automatically by the monitoring interval.
+   */
   private checkAlerts() {
     const now = new Date();
     const currentHour = now.getHours();
@@ -121,7 +146,7 @@ export class AlertasService {
       // Time Trigger
       if (currentHour > hora || (currentHour === hora && currentMinute >= minuto)) {
         
-        let context: any[] = [];
+        let context: unknown[] = [];
         
         // Context Selection Strategy
         if (alerta.modulo === 'PRESTAMOS') {
@@ -172,6 +197,11 @@ export class AlertasService {
     });
   }
 
+  /**
+   * Imports alerts from a JSON string.
+   * Validates structure and assigns ownership to the current user.
+   * @param jsonString The JSON string containing an array of alert configurations.
+   */
   importAlerts(jsonString: string) {
     const user = this.authService.currentUser();
     if (!user) return;

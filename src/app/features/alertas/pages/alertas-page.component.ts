@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
 import { AlertasService } from '../services/alertas.service';
@@ -9,6 +9,7 @@ import { AlertConfig } from '../models/alertas.models';
   selector: 'app-alertas-page',
   standalone: true,
   imports: [CommonModule, LucideAngularModule, FormularioAlertaComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-6">
       <!-- Header -->
@@ -17,7 +18,7 @@ import { AlertConfig } from '../models/alertas.models';
           <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Configuración de Alertas</h1>
           <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Administra las alertas automáticas del sistema</p>
         </div>
-        <button (click)="openCreateModal()" class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-slate-800 dark:hover:bg-slate-700 transition-colors">
+        <button (click)="openCreateModal()" class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-slate-800 dark:bg-blue-500 dark:hover:bg-blue-400 transition-colors">
           <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
           <span>Nueva Alerta</span>
         </button>

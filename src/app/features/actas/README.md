@@ -1,65 +1,32 @@
-# Módulo de Actas
+# Actas Module
 
-Módulo completo para la gestión de actas de asignación y devolución de equipos.
+## Overview
+The **Actas** module manages the creation, approval, and tracking of "Actas de Entrega" (Handover Records) and "Devolución" (Return Records). It allows generating PDFs, digital signatures, and historical tracking.
 
-## Estructura
+## Architecture
 
-```
-src/app/features/actas/
-├── models/
-│   └── actas.models.ts          # Interfaces y tipos
-├── services/
-│   └── actas.service.ts         # Servicio con integración API
-├── pages/
-│   ├── crear-acta/              # Formulario de creación
-│   ├── aprobar-pdf/             # Subida de PDF
-│   └── dashboard/               # Vista principal
-├── components/
-│   ├── tabla-equipos.component.ts
-│   ├── tabla-pendientes.component.ts
-│   └── tabla-historico.component.ts
-└── actas.routes.ts
-```
+### Components
+- **DashboardComponent** (`/pages/dashboard`): Smart container serving as the main entry point. Displays Pending/Historical records.
+- **CrearActaComponent** (`/pages/crear-acta`): Form-heavy component for creating new records. Integration with `TablaEquipos`.
+- **AprobarPdfComponent** (`/pages/aprobar-pdf`): Handles PDF upload for external approval workflows.
+- **TablaEquiposComponent**: Smart/Dumb hybrid handling the `FormArray` of equipment items in an act.
+- **TablaPendientesComponent**: Dumb component (OnPush) for pending list.
+- **TablaHistoricoComponent**: Dumb component (OnPush) for history list.
 
-## Rutas
+## flow
+1.  **Creation**: User fills `CrearActa` form -> `ActasService.crearActa()` -> Backend generates PDF.
+2.  **Approval**: User signs manually or uploads signed PDF via `AprobarPdf`.
+3.  **Tracking**: `Dashboard` polls for status changes or shows history.
 
-- `/actas` - Dashboard principal
-- `/actas/crear` - Crear nueva acta
-- `/actas/aprobar` - Aprobar con PDF
+## Key Services
+### `ActasService`
+- **`crearActa(request)`**: POST to generate new record.
+- **`aprobarPdf(file)`**: Uploads signed PDF.
+- **`listarPendientes()`**: GET pending actions.
+- **`listarHistorico(filters)`**: GET searchable history.
+- **`validarSerial(serial)`**: Helper to check equipment availability.
 
-## Funcionalidades
-
-### 1. Crear Acta
-- Formulario con validación en tiempo real
-- Tabla dinámica de equipos
-- Validación de seriales contra API
-- Validación de usuarios en AD
-- Selección de periféricos
-- Campo opcional de ticket
-
-### 2. Aprobar PDF
-- Drag & drop de archivos PDF
-- Validación de tipo de archivo
-- Aprobación automática o manual
-
-### 3. Dashboard
-- Tab de solicitudes pendientes
-- Tab de histórico
-- Exportación a Excel
-- Aprobación manual desde tabla
-
-## Modo Mock
-
-El módulo respeta la configuración `environment.useMocks`:
-- `true`: Usa datos simulados
-- `false`: Conecta con n8n API
-
-## API Endpoints (n8n)
-
-- `POST /webhook/form-solicitud` - Crear acta
-- `POST /webhook/aprobar-acta` - Aprobar PDF
-- `GET /webhook/listar-pendientes` - Listar pendientes
-- `POST /webhook/aprobar-manual` - Aprobar manual
-- `GET /webhook/listar-historico` - Histórico
-- `POST /webhook/validar-serial` - Validar equipo
-- `POST /webhook/validar-usuario` - Validar usuario AD
+## Dependencies
+- `@core`: `ApiService` for backend communication.
+- `@shared`: Common UI elements.
+- `ngx-toastr`: Notifications.

@@ -7,7 +7,7 @@ export type GroupOperator = 'AND' | 'OR';
 export interface RuleCondition {
   field: string;
   operator: Operator;
-  value: any;
+  value: string | number | boolean;
   valueType?: 'LITERAL' | 'VARIABLE'; // Default 'LITERAL'
 }
 

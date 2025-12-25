@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, inject, computed, signal } from '@angular/core';
+import { Component, EventEmitter, Output, inject, computed, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
@@ -11,6 +11,7 @@ import { PRESTAMOS_FIELDS, INVENTARIO_FIELDS, ACTAS_FIELDS } from '../models/ale
   selector: 'app-formulario-alerta',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, RuleBuilderComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" (click)="closeModal()">
       <div class="bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col" (click)="$event.stopPropagation()">
@@ -99,7 +100,7 @@ import { PRESTAMOS_FIELDS, INVENTARIO_FIELDS, ACTAS_FIELDS } from '../models/ale
 
             <div class="pt-4 flex justify-end gap-3 border-t border-slate-200 dark:border-slate-700">
               <button type="button" (click)="closeModal()" class="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600">Cancelar</button>
-              <button type="submit" [disabled]="alertaForm.invalid" class="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-slate-800 dark:hover:bg-slate-700 rounded-lg disabled:opacity-50">Guardar Alerta</button>
+              <button type="submit" [disabled]="alertaForm.invalid" class="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-slate-800 dark:bg-blue-500 dark:hover:bg-blue-400 rounded-lg disabled:opacity-50">Guardar Alerta</button>
             </div>
           </form>
         </div>

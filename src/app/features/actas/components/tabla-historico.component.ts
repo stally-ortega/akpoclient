@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActaHistorico } from '../models';
 
@@ -6,6 +6,7 @@ import { ActaHistorico } from '../models';
   selector: 'app-tabla-historico',
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="overflow-x-auto bg-white dark:bg-slate-800">
       <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-700">

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -14,6 +14,7 @@ import { ActaPendiente, ActaHistorico } from '../../models';
   selector: 'app-dashboard',
   standalone: true,
   imports: [CommonModule, RouterLink, TablaPendientesComponent, TablaHistoricoComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-6">
       <div class="flex items-center justify-between">
@@ -24,7 +25,7 @@ import { ActaPendiente, ActaHistorico } from '../../models';
             Aprobar con PDF
           </a>
           <a routerLink="/actas/crear" 
-            class="px-4 py-2 bg-primary text-white rounded-md hover:bg-slate-800 dark:hover:bg-slate-700 transition-colors text-sm font-medium">
+            class="px-4 py-2 bg-primary text-white rounded-md hover:bg-slate-800 dark:bg-blue-500 dark:hover:bg-blue-400 transition-colors text-sm font-medium">
             + Nueva Acta
           </a>
         </div>

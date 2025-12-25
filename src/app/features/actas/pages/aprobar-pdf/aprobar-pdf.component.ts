@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Action } from 'rxjs/internal/scheduler/Action';
@@ -12,6 +12,7 @@ import { ActasService } from '../../services';
   selector: 'app-aprobar-pdf',
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="max-w-2xl mx-auto space-y-6">
       <div>

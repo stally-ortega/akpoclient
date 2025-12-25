@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { LucideAngularModule, Sun, Moon, Monitor, Variable, Database, CheckCircle, Trash, Upload, Download } from 'lucide-angular';
@@ -17,6 +17,7 @@ import { AlertConfig } from '../../alertas/models/alertas.models';
     LucideAngularModule
   ],
   providers: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-8 max-w-5xl mx-auto pb-20">
       
