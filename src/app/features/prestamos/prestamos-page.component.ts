@@ -13,60 +13,76 @@ import { Prestamo } from './models/prestamo.models';
   imports: [CommonModule, FormsModule, LucideAngularModule, FormularioPrestamoComponent, DetallePrestamoComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="space-y-6">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Control de Préstamos</h1>
-          <p class="text-slate-500 dark:text-slate-400 mt-1">Gestiona préstamos diarios de equipos y periféricos.</p>
-        </div>
-        <div class="flex gap-3">
-          <button (click)="prestamosService.exportarExcel()" class="flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-blue-500 text-slate-700 dark:text-blue-400 px-4 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-blue-900/20 transition-colors shadow-sm">
-            <lucide-icon name="download" class="w-5 h-5"></lucide-icon>
-            Exportar Excel
-          </button>
-          <button (click)="showForm = true" class="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-slate-800 dark:bg-blue-600 dark:hover:bg-blue-500 transition-colors shadow-sm">
-            <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
-            Nuevo Préstamo
-          </button>
+    <div class="space-y-8 animate-fade-in pb-20">
+      
+      <!-- Premium Header (Compact) -->
+      <div class="relative overflow-hidden bg-gradient-to-r from-emerald-900 to-teal-900 rounded-2xl shadow-lg p-5 text-white">
+        <div class="absolute top-0 right-0 -mt-4 -mr-4 w-16 h-16 bg-white/10 rounded-full blur-xl"></div>
+        <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-24 h-24 bg-teal-500/10 rounded-full blur-xl"></div>
+        
+        <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div class="flex items-center gap-4">
+            <div class="p-2 bg-white/10 rounded-lg shrink-0">
+                <lucide-icon name="clock" class="w-6 h-6 text-emerald-200"></lucide-icon>
+            </div>
+            <div>
+              <h1 class="text-2xl font-bold tracking-tight">
+                 Control de Préstamos
+              </h1>
+              <p class="text-emerald-100 text-sm opacity-90">
+                Gestione préstamos temporales de activos y periféricos.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex gap-2">
+            <button (click)="prestamosService.exportarExcel()" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg backdrop-blur-sm transition-all border border-white/20 shadow-sm text-sm">
+              <lucide-icon name="download" class="w-4 h-4"></lucide-icon>
+              Exportar
+            </button>
+            <button (click)="showForm = true" class="group flex items-center gap-2 bg-white text-emerald-900 px-4 py-2 rounded-lg hover:bg-emerald-50 transition-all shadow-md font-semibold text-sm relative overflow-hidden">
+              <div class="absolute inset-0 bg-emerald-200/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+              <lucide-icon name="plus" class="w-4 h-4 relative z-10"></lucide-icon>
+              <span class="relative z-10">Nuevo Préstamo</span>
+            </button>
+          </div>
         </div>
       </div>
 
       <!-- Filters Toolbar -->
-      <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col xl:flex-row gap-4 xl:items-center">
+      <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col xl:flex-row gap-6 xl:items-center">
         <!-- Search -->
         <div class="flex-1 w-full relative">
-          <lucide-icon name="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></lucide-icon>
+          <lucide-icon name="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></lucide-icon>
           <input 
             type="text" 
             [(ngModel)]="searchTerm" 
             (ngModelChange)="updateSearch($event)"
             placeholder="Buscar por usuario, ítem o serial..." 
-            class="w-full pl-12 pr-4 py-2 rounded-lg border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:border-primary focus:ring-primary text-sm placeholder-slate-400">
+            class="w-full pl-12 pr-4 h-12 rounded-xl border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50 text-slate-900 dark:text-white focus:border-teal-500 focus:ring-teal-500 text-sm placeholder-slate-400 transition-all">
         </div>
         
         <!-- Date Range -->
-        <div class="flex flex-col sm:flex-row gap-3 xl:w-auto w-full">
-           <div class="flex items-center gap-2 flex-1">
-             <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 whitespace-nowrap w-12">Desde:</span>
+        <div class="flex flex-col sm:flex-row gap-4 xl:w-auto w-full">
+           <div class="flex items-center gap-3 flex-1 bg-slate-50 dark:bg-slate-900/50 p-2 rounded-xl border border-slate-200 dark:border-slate-700">
+             <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide ml-2">Desde</span>
              <div class="relative w-full">
-               <lucide-icon name="calendar" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></lucide-icon>
                <input 
                  type="datetime-local" 
                  [value]="prestamosService.filterStartDate()" 
                  (change)="updateStartDate($event)"
-                 class="w-full pl-10 py-2 rounded-lg border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:border-primary focus:ring-primary text-sm">
+                 class="w-full bg-transparent border-none text-sm text-slate-900 dark:text-white focus:ring-0 p-0">
              </div>
            </div>
 
-           <div class="flex items-center gap-2 flex-1">
-             <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 whitespace-nowrap w-12">Hasta:</span>
+           <div class="flex items-center gap-3 flex-1 bg-slate-50 dark:bg-slate-900/50 p-2 rounded-xl border border-slate-200 dark:border-slate-700">
+             <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide ml-2">Hasta</span>
              <div class="relative w-full">
-                <lucide-icon name="calendar" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></lucide-icon>
                 <input 
                   type="datetime-local" 
                   [value]="prestamosService.filterEndDate()" 
                   (change)="updateEndDate($event)"
-                  class="w-full pl-10 py-2 rounded-lg border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:border-primary focus:ring-primary text-sm">
+                  class="w-full bg-transparent border-none text-sm text-slate-900 dark:text-white focus:ring-0 p-0">
              </div>
            </div>
         </div>
@@ -74,14 +90,16 @@ import { Prestamo } from './models/prestamo.models';
 
       <!-- Active Loans List (Compact) -->
       <div class="grid gap-4">
-        <div *ngIf="prestamosService.prestamos().length === 0" class="text-center py-12 bg-white dark:bg-slate-800 rounded-xl border border-dashed border-slate-300 dark:border-slate-600">
-           <lucide-icon name="search" class="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-3" *ngIf="searchTerm || prestamosService.filterStartDate()"></lucide-icon>
-           <lucide-icon name="clock" class="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-3" *ngIf="!searchTerm && !prestamosService.filterStartDate()"></lucide-icon>
-           <p class="text-slate-500 dark:text-slate-400">No se encontraron préstamos con los filtros actuales.</p>
+        <div *ngIf="prestamosService.prestamos().length === 0" class="text-center py-16 bg-white dark:bg-slate-800 rounded-2xl border border-dashed border-slate-300 dark:border-slate-600">
+           <div class="w-20 h-20 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-4">
+              <lucide-icon name="clock" class="w-10 h-10 text-slate-300 dark:text-slate-600"></lucide-icon>
+           </div>
+           <p class="text-lg font-medium text-slate-900 dark:text-white">Sin préstamos recientes</p>
+           <p class="text-slate-500 dark:text-slate-400">No se encontraron registros con los filtros actuales.</p>
         </div>
 
         <!-- Column Headers -->
-        <div *ngIf="prestamosService.prestamos().length > 0" class="hidden md:grid grid-cols-12 gap-4 px-6 py-2 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+        <div *ngIf="prestamosService.prestamos().length > 0" class="hidden md:grid grid-cols-12 gap-4 px-6 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider pl-8">
           <div class="col-span-4">Usuario</div>
           <div class="col-span-3">Fecha</div>
           <div class="col-span-2 text-center">Ítems</div>
@@ -91,44 +109,58 @@ import { Prestamo } from './models/prestamo.models';
         <!-- Compact Card / Row -->
         <div *ngFor="let prestamo of prestamosService.prestamos()" 
              (click)="selectedPrestamo.set(prestamo)"
-             class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-100 dark:border-slate-700 p-4 hover:shadow-md hover:border-blue-200 dark:hover:border-blue-800 transition-all cursor-pointer">
+             class="group bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-4 hover:shadow-lg hover:border-teal-500/30 dark:hover:border-teal-500/30 transition-all cursor-pointer relative overflow-hidden">
           
+          <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-teal-500 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
           <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
              <!-- User -->
-             <div class="col-span-1 md:col-span-4 flex items-center gap-3">
-               <div class="w-8 h-8 rounded-full bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-300 font-bold text-sm">
+             <div class="col-span-1 md:col-span-4 flex items-center gap-4 pl-2">
+               <div class="w-10 h-10 rounded-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold text-sm shadow-inner">
                  {{ prestamo.usuarioSolicitante.charAt(0).toUpperCase() }}
                </div>
-               <span class="font-medium text-slate-900 dark:text-white truncate">{{ prestamo.usuarioSolicitante }}</span>
+               <div>
+                  <span class="block font-semibold text-slate-900 dark:text-white truncate">{{ prestamo.usuarioSolicitante }}</span>
+                  <span class="text-xs text-slate-500 flex items-center gap-1">
+                     <lucide-icon name="user" class="w-3 h-3"></lucide-icon> Solicitante
+                  </span>
+               </div>
              </div>
 
              <!-- Date -->
-             <div class="col-span-1 md:col-span-3 flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-                <lucide-icon name="calendar" class="w-4 h-4 text-slate-400 dark:text-slate-500"></lucide-icon>
-                <span class="truncate">{{ prestamo.fechaPrestamo | date:'medium' }}</span>
+             <div class="col-span-1 md:col-span-3 flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                <div class="p-1.5 bg-slate-50 dark:bg-slate-900 rounded-lg text-slate-400">
+                   <lucide-icon name="calendar" class="w-4 h-4"></lucide-icon>
+                </div>
+                <span class="truncate font-medium">{{ prestamo.fechaPrestamo | date:'medium' }}</span>
              </div>
 
              <!-- Items Summary -->
              <div class="col-span-1 md:col-span-2 flex justify-start md:justify-center">
-               <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">
-                 <lucide-icon name="package" class="w-3 h-3"></lucide-icon>
-                 {{ prestamo.items.length }} ítems
+               <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 text-xs font-bold text-indigo-600 dark:text-indigo-400">
+                 <lucide-icon name="package" class="w-3.5 h-3.5"></lucide-icon>
+                 {{ prestamo.items.length }}
                </span>
              </div>
 
              <!-- Status & Badge -->
-             <div class="col-span-1 md:col-span-3 flex justify-between md:justify-end items-center gap-3">
+             <div class="col-span-1 md:col-span-3 flex justify-between md:justify-end items-center gap-4">
                <div class="md:text-right">
-                  <span *ngIf="prestamo.estado === 'ACTIVO'" class="inline-flex items-center gap-1 px-2.5 py-1 bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 text-xs font-semibold rounded-full border border-yellow-100 dark:border-yellow-800">
-                    <span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>
+                  <span *ngIf="prestamo.estado === 'ACTIVO'" class="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 text-xs font-bold rounded-full border border-amber-200 dark:border-amber-800">
+                    <span class="relative flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                    </span>
                     EN CURSO
                   </span>
-                  <span *ngIf="prestamo.estado === 'FINALIZADO'" class="inline-flex items-center gap-1 px-2.5 py-1 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs font-semibold rounded-full border border-green-100 dark:border-green-800">
-                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                  <span *ngIf="prestamo.estado === 'FINALIZADO'" class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 text-xs font-bold rounded-full border border-emerald-200 dark:border-emerald-800">
+                    <lucide-icon name="check-circle" class="w-3 h-3"></lucide-icon>
                     DEVUELTO
                   </span>
                </div>
-               <lucide-icon name="chevron-right" class="w-4 h-4 text-slate-300 dark:text-slate-600 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors"></lucide-icon>
+               <div class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                  <lucide-icon name="chevron-right" class="w-5 h-5 text-slate-400"></lucide-icon>
+               </div>
              </div>
           </div>
         </div>
@@ -143,7 +175,7 @@ import { Prestamo } from './models/prestamo.models';
       [prestamo]="selectedPrestamo()!" 
       (closeEvent)="selectedPrestamo.set(null)">
     </app-detalle-prestamo>
-  `
+  `,
 })
 export class PrestamosPageComponent {
   prestamosService = inject(PrestamosService);

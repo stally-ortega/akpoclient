@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { importProvidersFrom } from '@angular/core';
-import { LucideAngularModule, Sun, Moon, Monitor, Variable, Database, CheckCircle, Trash, Upload, Download } from 'lucide-angular';
+import { LucideAngularModule, Sun, Moon, Monitor, Variable, Database, CheckCircle, Trash, Upload, Download, Settings } from 'lucide-angular';
 import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
@@ -44,7 +44,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     providers: [
       importProvidersFrom(LucideAngularModule.pick({ 
-        Sun, Moon, Monitor, Variable, Database, CheckCircle, Trash, Upload, Download 
+        Sun, Moon, Monitor, Variable, Database, CheckCircle, Trash, Upload, Download, Settings
       }))
     ]
   },

@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { LucideAngularModule } from 'lucide-angular';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -13,21 +14,38 @@ import { ActaPendiente, ActaHistorico } from '../../models';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, TablaPendientesComponent, TablaHistoricoComponent],
+  imports: [CommonModule, RouterLink, TablaPendientesComponent, TablaHistoricoComponent, LucideAngularModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-6">
-      <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Gestión de Actas</h1>
-        <div class="flex gap-3">
-          <a routerLink="/actas/aprobar" 
-            class="px-4 py-2 bg-success text-white rounded-md hover:bg-green-600 transition-colors text-sm font-medium">
-            Aprobar con PDF
-          </a>
-          <a routerLink="/actas/crear" 
-            class="px-4 py-2 bg-primary text-white rounded-md hover:bg-slate-800 dark:bg-blue-500 dark:hover:bg-blue-400 transition-colors text-sm font-medium">
-            + Nueva Acta
-          </a>
+      <!-- Premium Header -->
+      <div class="relative overflow-hidden bg-gradient-to-r from-indigo-900 to-purple-900 rounded-2xl shadow-lg p-5 text-white">
+        <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+        <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-32 h-32 bg-purple-500/10 rounded-full blur-xl"></div>
+        
+        <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div class="flex items-center gap-4">
+             <div class="p-2 bg-white/10 rounded-lg shrink-0">
+                <lucide-icon name="file-text" class="w-6 h-6 text-purple-200"></lucide-icon>
+             </div>
+             <div>
+               <h1 class="text-2xl font-bold tracking-tight">Gestión de Actas</h1>
+               <p class="text-purple-100 text-sm opacity-90">Control de documentos y aprobaciones.</p>
+             </div>
+          </div>
+          
+          <div class="flex gap-3">
+             <a routerLink="/actas/aprobar" 
+               class="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg backdrop-blur-sm transition-all border border-white/20 shadow-sm text-sm no-underline">
+               <lucide-icon name="check-square" class="w-4 h-4"></lucide-icon>
+               Aprobar PDF
+             </a>
+             <a routerLink="/actas/crear" 
+               class="flex items-center gap-2 bg-white text-indigo-900 px-4 py-2 rounded-lg hover:bg-indigo-50 transition-all shadow-md font-semibold text-sm relative overflow-hidden no-underline">
+               <lucide-icon name="plus" class="w-4 h-4"></lucide-icon>
+               Nueva Acta
+             </a>
+          </div>
         </div>
       </div>
 

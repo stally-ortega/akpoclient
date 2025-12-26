@@ -85,3 +85,6 @@ Thumbs.db
 # Misc
 .angular
 *.code-workspace
+
+# Mocks (Sensitive Data)
+/src/app/core/mocks/

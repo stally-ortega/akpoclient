@@ -13,15 +13,27 @@ import { AlertConfig } from '../models/alertas.models';
   template: `
     <div class="space-y-6">
       <!-- Header -->
-      <div class="flex items-center justify-between">
-        <div>
-          <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Configuración de Alertas</h1>
-          <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Administra las alertas automáticas del sistema</p>
+      <!-- Premium Header -->
+      <div class="relative overflow-hidden bg-gradient-to-r from-rose-900 to-red-900 rounded-2xl shadow-lg p-5 text-white">
+        <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+        <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-32 h-32 bg-orange-500/10 rounded-full blur-xl"></div>
+        
+        <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div class="flex items-center gap-4">
+             <div class="p-2 bg-white/10 rounded-lg shrink-0">
+                <lucide-icon name="bell-ring" class="w-6 h-6 text-rose-200"></lucide-icon>
+             </div>
+             <div>
+               <h1 class="text-2xl font-bold tracking-tight">Configuración de Alertas</h1>
+               <p class="text-rose-100 text-sm opacity-90">Administración de notificaciones automáticas.</p>
+             </div>
+          </div>
+          
+          <button (click)="openCreateModal()" class="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg backdrop-blur-sm transition-all border border-white/20 shadow-sm text-sm">
+            <lucide-icon name="plus" class="w-4 h-4"></lucide-icon>
+            <span>Nueva Alerta</span>
+          </button>
         </div>
-        <button (click)="openCreateModal()" class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-slate-800 dark:bg-blue-500 dark:hover:bg-blue-400 transition-colors">
-          <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
-          <span>Nueva Alerta</span>
-        </button>
       </div>
 
       <!-- Alerts List -->

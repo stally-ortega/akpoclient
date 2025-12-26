@@ -1,7 +1,6 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Prestamo, ItemPrestamo } from '../models/prestamo.models';
-import { InventarioService } from '../../inventario/services/inventario.service';
 import { ToastrService } from 'ngx-toastr';
 import { interval } from 'rxjs';
 import * as XLSX from 'xlsx';
@@ -16,7 +15,6 @@ import { environment } from '../../../../environments/environment';
 })
 export class PrestamosService {
   private http = inject(HttpClient);
-  private inventarioService = inject(InventarioService);
   private toast = inject(ToastrService);
 
   // State

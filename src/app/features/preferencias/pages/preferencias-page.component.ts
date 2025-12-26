@@ -21,10 +21,22 @@ import { AlertConfig } from '../../alertas/models/alertas.models';
   template: `
     <div class="space-y-8 max-w-5xl mx-auto pb-20">
       
-      <!-- Header -->
-      <div>
-        <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Preferencias</h1>
-        <p class="text-slate-500 dark:text-slate-400">Personaliza tu experiencia y configura variables globales.</p>
+      <!-- Premium Header -->
+      <div class="relative overflow-hidden bg-gradient-to-r from-gray-800 to-slate-900 rounded-2xl shadow-lg p-5 text-white">
+        <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/5 rounded-full blur-xl"></div>
+        <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-32 h-32 bg-purple-500/10 rounded-full blur-xl"></div>
+        
+        <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div class="flex items-center gap-4">
+             <div class="p-2 bg-white/10 rounded-lg shrink-0">
+                <lucide-icon name="settings" class="w-6 h-6 text-gray-200"></lucide-icon>
+             </div>
+             <div>
+               <h1 class="text-2xl font-bold tracking-tight">Preferencias</h1>
+               <p class="text-gray-300 text-sm opacity-90">Personaliza tu experiencia y configura variables globales.</p>
+             </div>
+          </div>
+        </div>
       </div>
 
       <!-- 1. Theme Configuration -->

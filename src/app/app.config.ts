@@ -4,7 +4,7 @@ import { provideRouter, withComponentInputBinding, withViewTransitions } from '@
 import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
-import { LucideAngularModule, LayoutDashboard, Monitor, Mail, FileText, Package, Keyboard, Mouse, HardDrive, Headphones, X, User, Calendar, Tag, Activity, Clock, Plus, Trash, CheckSquare, CheckCircle, ChevronRight, Check, Search, Download, Bell, Briefcase, Settings, Sun, Moon } from 'lucide-angular';
+import { LucideAngularModule, LayoutDashboard, Monitor, Mail, FileText, Package, Keyboard, Mouse, HardDrive, Headphones, X, User, Calendar, Tag, Activity, Clock, Plus, Trash, CheckSquare, CheckCircle, ChevronRight, Check, Search, Download, Bell, Briefcase, Settings, Sun, Moon, Box, Lock, Eye, EyeOff, AlertCircle, Info, ChevronDown, Ticket, UploadCloud, PackageSearch, MailCheck, BellRing, Settings2, Send } from 'lucide-angular';
 
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
@@ -52,7 +52,21 @@ export const appConfig: ApplicationConfig = {
       Briefcase,
       Settings,
       Sun,
-      Moon
+      Moon,
+      Box,
+      Lock,
+      Eye,
+      EyeOff,
+      AlertCircle,
+      Info,
+      ChevronDown,
+      Ticket,
+      UploadCloud,
+      PackageSearch,
+      MailCheck,
+      BellRing,
+      Settings2,
+      Send
     }))
   ]
 };

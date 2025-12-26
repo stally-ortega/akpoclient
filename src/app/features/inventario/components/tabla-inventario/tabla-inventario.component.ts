@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
-import { EquipoInventario } from '../../models';
+import { Activo } from '../../../../core/models/domain/activo.model';
 
 @Component({
   selector: 'app-tabla-inventario',
@@ -22,49 +22,45 @@ import { EquipoInventario } from '../../models';
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
-          <tr *ngFor="let equipo of equipos" class="hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors" (click)="rowClick.emit(equipo)">
-            <td class="px-6 py-4 text-sm font-medium text-slate-900 dark:text-white group-hover:text-primary">{{ equipo.serial }}</td>
+          <tr *ngFor="let activo of equipos" class="hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors" (click)="rowClick.emit(activo)">
+            <td class="px-6 py-4 text-sm font-medium text-slate-900 dark:text-white group-hover:text-primary">{{ activo.serial }}</td>
             <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-300">
-              <div class="font-medium text-slate-900 dark:text-white">{{ equipo.tipo }}</div>
-              <div class="text-xs text-slate-500 dark:text-slate-400">{{ equipo.marca }} {{ equipo.modelo }}</div>
+              <div class="font-medium text-slate-900 dark:text-white">{{ activo.tipo.nombre }}</div>
+              <div class="text-xs text-slate-500 dark:text-slate-400">{{ activo.marca.nombre }} {{ activo.modelo?.nombre }}</div>
             </td>
             <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-300">
-              <span *ngIf="equipo.proyecto" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
-                {{ equipo.proyecto }}
+              <span *ngIf="activo.proyecto" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
+                {{ activo.proyecto.nombre }}
               </span>
-              <span *ngIf="!equipo.proyecto" class="text-slate-400">-</span>
+              <span *ngIf="!activo.proyecto" class="text-slate-400">-</span>
             </td>
             <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-300">
-              <div *ngIf="equipo.usuarioAsignado">
-                <div class="font-medium text-slate-900 dark:text-white">{{ equipo.usuarioAsignado }}</div>
-                <div class="text-xs text-slate-500 dark:text-slate-400" *ngIf="equipo.fechaAsignacion">
-                  Desde {{ equipo.fechaAsignacion | date:'shortDate' }}
+              <div *ngIf="activo.usuarioAsignado">
+                <div class="font-medium text-slate-900 dark:text-white">{{ activo.usuarioAsignado.nombre }}</div>
+                <div class="text-xs text-slate-500 dark:text-slate-400" *ngIf="activo.usuarioAsignado.usuarioAd">
+                  {{ activo.usuarioAsignado.usuarioAd }}
                 </div>
               </div>
-              <span *ngIf="!equipo.usuarioAsignado" class="text-slate-400">-</span>
+              <span *ngIf="!activo.usuarioAsignado" class="text-slate-400">-</span>
             </td>
             <td class="px-6 py-4">
               <span class="px-2 py-1 text-xs font-semibold rounded-full"
                 [ngClass]="{
-                  'bg-green-100 text-green-800': equipo.estado === 'DISPONIBLE',
-                  'bg-indigo-100 text-indigo-800': equipo.estado === 'ALMACEN',
-                  'bg-blue-100 text-blue-800': equipo.estado === 'ASIGNADO',
-                  'bg-yellow-100 text-yellow-800': equipo.estado === 'REPARACION',
-                  'bg-red-100 text-red-800': equipo.estado === 'BAJA'
+                  'bg-green-100 text-green-800': activo.estado === 'Activo',
+                  'bg-indigo-100 text-indigo-800': activo.estado === 'Funcional inactivo',
+                  'bg-red-100 text-red-800': activo.estado === 'Dañado' || activo.estado === 'Robado' || activo.estado === 'Baja'
                 }">
-                {{ equipo.estado }}
+                {{ activo.estado }}
               </span>
             </td>
             <td class="px-6 py-4">
-              <div class="flex justify-center gap-2 text-slate-400">
+              <div class="flex justify-center gap-2 text-slate-400" *ngIf="activo.accesorios">
                 <!-- Teclado -->
-                 <lucide-icon *ngIf="equipo.accesorios.teclado" name="keyboard" class="w-5 h-5 text-slate-600" title="Teclado"></lucide-icon>
+                 <lucide-icon *ngIf="activo.accesorios['teclado']" name="keyboard" class="w-5 h-5 text-slate-600" title="Teclado"></lucide-icon>
                 <!-- Mouse -->
-                 <lucide-icon *ngIf="equipo.accesorios.mouse" name="mouse" class="w-5 h-5 text-slate-600" title="Mouse"></lucide-icon>
+                 <lucide-icon *ngIf="activo.accesorios['mouse']" name="mouse" class="w-5 h-5 text-slate-600" title="Mouse"></lucide-icon>
                 <!-- Base -->
-                 <lucide-icon *ngIf="equipo.accesorios.base" name="hard-drive" class="w-5 h-5 text-slate-600" title="Base"></lucide-icon>
-                <!-- Diadema -->
-                 <lucide-icon *ngIf="equipo.accesorios.diadema" name="headphones" class="w-5 h-5 text-slate-600" [title]="'Diadema: ' + equipo.accesorios.diadema"></lucide-icon>
+                 <lucide-icon *ngIf="activo.accesorios['base']" name="hard-drive" class="w-5 h-5 text-slate-600" title="Base"></lucide-icon>
               </div>
             </td>
           </tr>
@@ -79,6 +75,6 @@ import { EquipoInventario } from '../../models';
   `
 })
 export class TablaInventarioComponent {
-  @Input() equipos: EquipoInventario[] = [];
-  @Output() rowClick = new EventEmitter<EquipoInventario>();
+  @Input() equipos: Activo[] = [];
+  @Output() rowClick = new EventEmitter<Activo>();
 }

@@ -1,28 +1,43 @@
 import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { LucideAngularModule } from 'lucide-angular';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { InventarioService } from '../../services';
+import { ActivoService } from '../../../../core/services/activo.service'; // NEW Service
+import { Activo, Proyecto } from '../../../../core/models/domain/activo.model'; // NEW Models
+import { FiltrosInventario } from '../../models'; // Keep legacy interface for filters state, or redefine
 import { FiltrosInventarioComponent, TablaInventarioComponent } from '../../components';
 import { DetalleEquipoComponent } from '../../components/detalle-equipo/detalle-equipo.component';
-import { EquipoInventario, FiltrosInventario } from '../../models';
 
 @Component({
   selector: 'app-consulta-equipos',
   standalone: true,
-  imports: [CommonModule, FiltrosInventarioComponent, TablaInventarioComponent, DetalleEquipoComponent],
+  imports: [CommonModule, FiltrosInventarioComponent, TablaInventarioComponent, DetalleEquipoComponent, LucideAngularModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-6">
-      <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Consulta de Equipos</h1>
-        <button (click)="exportarExcel()" 
-          class="px-4 py-2 bg-success text-white rounded-md hover:bg-green-600 transition-colors text-sm font-medium flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
-          </svg>
-          Exportar Excel
-        </button>
+      <!-- Premium Header -->
+      <div class="relative overflow-hidden bg-gradient-to-r from-cyan-900 to-blue-900 rounded-2xl shadow-lg p-5 text-white mb-8">
+        <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+        <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-32 h-32 bg-cyan-500/10 rounded-full blur-xl"></div>
+        
+        <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div class="flex items-center gap-4">
+             <div class="p-2 bg-white/10 rounded-lg shrink-0">
+                <lucide-icon name="package-search" class="w-6 h-6 text-cyan-200"></lucide-icon>
+             </div>
+             <div>
+               <h1 class="text-2xl font-bold tracking-tight">Consulta de Equipos</h1>
+               <p class="text-cyan-100 text-sm opacity-90">Gestión centralizada del inventario tecnológico.</p>
+             </div>
+          </div>
+          
+          <button (click)="exportarExcel()" 
+            class="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg backdrop-blur-sm transition-all border border-white/20 shadow-sm text-sm">
+            <lucide-icon name="download" class="w-4 h-4"></lucide-icon>
+            Exportar Excel
+          </button>
+        </div>
       </div>
 
       <app-filtros-inventario 
@@ -46,30 +61,36 @@ import { EquipoInventario, FiltrosInventario } from '../../models';
         Total resultados: {{ equipos().length }}
       </div>
 
-      <!-- Detail Modal -->
+      <!-- Detail Modal (To be refactored later for full object support) -->
+       <!-- Logic temporarily disabled for modal deep integration, passing any to avoid type errors in legacy component -->
       <app-detalle-equipo
         *ngIf="selectedEquipo()"
-        [equipo]="selectedEquipo()!"
+        [equipo]="selectedEquipoAny" 
         (closed)="closeModal()">
       </app-detalle-equipo>
     </div>
   `
 })
 export class ConsultaEquiposComponent implements OnInit {
-  private inventarioService = inject(InventarioService);
+  private activoService = inject(ActivoService); // Injected new service
   private toast = inject(ToastrService);
 
-  equipos = signal<EquipoInventario[]>([]);
-  proyectos = signal<string[]>([]);
+  equipos = signal<Activo[]>([]);
+  proyectos = signal<Proyecto[]>([]);
   loading = signal(false);
-  selectedEquipo = signal<EquipoInventario | null>(null);
+  selectedEquipo = signal<Activo | null>(null);
+  
+  // Getter for legacy modal compatibility
+  get selectedEquipoAny(): any {
+    return this.selectedEquipo();
+  }
 
   // Mantener filtros actuales para exportación
   currentFiltros: FiltrosInventario = {};
 
   private route = inject(ActivatedRoute);
 
-  openModal(equipo: EquipoInventario) {
+  openModal(equipo: Activo) {
     this.selectedEquipo.set(equipo);
   }
 
@@ -83,20 +104,13 @@ export class ConsultaEquiposComponent implements OnInit {
     // Deep linking: Leer filtros de la URL
     this.route.queryParams.subscribe(params => {
       if (params['estado'] || params['proyecto'] || params['busqueda']) {
-         this.onFiltrosChanged({
-          estado: params['estado'] || '',
-          proyecto: params['proyecto'] || '',
-          busqueda: params['busqueda'] || ''
-        });
-        
-        // Actualizar componente hijo (filtros) si es necesario
-        // Nota: En una implementacion real, pasariamos estos valores al componente de filtros
-        // para que se reflejen en los inputs. Por ahora, solo filtramos la tabla.
-        this.currentFiltros = {
+         const initialFiltros = {
           estado: params['estado'] || '',
           proyecto: params['proyecto'] || '',
           busqueda: params['busqueda'] || ''
         };
+        this.currentFiltros = initialFiltros;
+        this.onFiltrosChanged(initialFiltros);
       } else {
         this.busquedaInicial();
       }
@@ -104,7 +118,7 @@ export class ConsultaEquiposComponent implements OnInit {
   }
 
   cargarProyectos() {
-    this.inventarioService.obtenerProyectos().subscribe({
+    this.activoService.getProyectos().subscribe({
       next: (proyectos) => this.proyectos.set(proyectos),
       error: () => this.toast.error('Error al cargar proyectos')
     });
@@ -118,9 +132,18 @@ export class ConsultaEquiposComponent implements OnInit {
     this.currentFiltros = filtros;
     this.loading.set(true);
     
-    this.inventarioService.consultarInventario(filtros).subscribe({
+    this.activoService.getActivos({
+      search: filtros.busqueda,
+      estado: filtros.estado || undefined
+    }).subscribe({
       next: (data) => {
-        this.equipos.set(data);
+        // Client-side filtering for project since ActivoService mock might not handle it fully yet
+        let filtered = data;
+        if (filtros.proyecto) {
+           filtered = data.filter(a => a.proyecto?.nombre === filtros.proyecto);
+        }
+        
+        this.equipos.set(filtered);
         this.loading.set(false);
       },
       error: () => {
@@ -146,17 +169,16 @@ export class ConsultaEquiposComponent implements OnInit {
     this.toast.success('Descarga iniciada');
   }
 
-  private convertToCSV(data: EquipoInventario[]): string {
-    const headers = ['Serial', 'Tipo', 'Marca', 'Modelo', 'Proyecto', 'Usuario', 'Estado', 'Fecha Asignación'];
+  private convertToCSV(data: Activo[]): string {
+    const headers = ['Serial', 'Tipo', 'Marca', 'Modelo', 'Proyecto', 'Usuario', 'Estado'];
     const rows = data.map(e => [
       e.serial,
-      e.tipo,
-      e.marca,
-      e.modelo,
-      e.proyecto || '',
-      e.usuarioAsignado || '',
-      e.estado,
-      e.fechaAsignacion ? new Date(e.fechaAsignacion).toLocaleDateString() : ''
+      e.tipo.nombre,
+      e.marca.nombre,
+      e.modelo?.nombre || '',
+      e.proyecto?.nombre || '',
+      e.usuarioAsignado?.nombre || '',
+      e.estado
     ]);
 
     return [

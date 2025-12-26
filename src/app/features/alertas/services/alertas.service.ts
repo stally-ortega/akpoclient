@@ -3,7 +3,6 @@ import { AlertConfig } from '../models/alertas.models';
 import { interval } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { PrestamosService } from '../../prestamos/services/prestamos.service';
-import { InventarioService } from '../../inventario/services/inventario.service';
 import { ActasService } from '../../actas/services/actas.service';
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -20,7 +19,6 @@ export class AlertasService {
   private toast = inject(ToastrService);
   private authService = inject(AuthService); // Inject Auth
   private prestamosService = inject(PrestamosService);
-  private inventarioService = inject(InventarioService);
   private actasService = inject(ActasService);
   private evaluator = inject(RuleEvaluatorService);
 

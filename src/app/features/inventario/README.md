@@ -17,9 +17,9 @@ The **Inventario** module manages the lifecycle of equipment (Laptops, Desktops,
 - All components use `ChangeDetectionStrategy.OnPush` for performance.
 
 ## Key Services
-### `InventarioService`
-- **`getEquipos(filtros)`**: Fetches paginated/filtered list.
-- **`getHistorial(serial)`**: Retrieves assignment history.
+### `ActivoService` (Core)
+- **`getActivos(filtros)`**: Fetches paginated/filtered list of assets (normalized).
+- **`getHistorial(serial)`**: Retrieves assignment history (previously in InventarioService).
 - **`getDetalle(serial)`**: Retrieves full asset details.
 
 ## Dependencies

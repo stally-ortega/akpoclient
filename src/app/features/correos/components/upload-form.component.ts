@@ -1,105 +1,70 @@
 import { Component, EventEmitter, Input, Output, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CorreosRequest } from '../models/correos.models';
+import { LucideAngularModule } from 'lucide-angular';
 
 /**
  * Component for uploading files.
- * Supports drag and drop and form configuration.
+ * Pure Dropzone: No internal form state, just file selection.
  */
 @Component({
   selector: 'app-upload-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, LucideAngularModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
-      <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Nuevo Proceso de Envío</h3>
-      
-      <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <div class="h-full flex flex-col">
         <!-- Drag & Drop Area -->
         <div 
-          class="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-8 text-center hover:border-accent dark:hover:border-accent transition-colors cursor-pointer bg-slate-50 dark:bg-slate-900/50"
+          class="flex-1 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-xl p-6 text-center hover:border-blue-500 dark:hover:border-blue-400 transition-all cursor-pointer bg-slate-50 dark:bg-slate-900/50 flex flex-col items-center justify-center group min-h-[200px]"
           (dragover)="onDragOver($event)"
           (dragleave)="onDragLeave($event)"
           (drop)="onDrop($event)"
           (click)="fileInput.click()"
-          [ngClass]="{'border-accent bg-blue-50 dark:bg-blue-900/20': isDragging()}">
+          [ngClass]="{'border-blue-500 bg-blue-50 dark:bg-blue-900/20 ring-4 ring-blue-500/10': isDragging()}">
           
           <input #fileInput type="file" class="hidden" (change)="onFileSelected($event)" accept=".csv,.xlsx">
           
-          <div *ngIf="!selectedFile()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-            </svg>
-            <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">
-              <span class="font-medium text-accent">Click para cargar</span> o arrastra y suelta
-            </p>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Solo archivos CSV o XLSX</p>
-          </div>
-
-          <div *ngIf="selectedFile() as file" class="flex items-center justify-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <div class="text-left">
-              <p class="text-sm font-medium text-slate-900 dark:text-white">{{ file.name }}</p>
-              <p class="text-xs text-slate-500 dark:text-slate-400">{{ (file.size / 1024).toFixed(2) }} KB</p>
+          <div *ngIf="!selectedFile()" class="pointer-events-none">
+            <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+               <lucide-icon name="upload-cloud" class="w-6 h-6 text-blue-600 dark:text-blue-400"></lucide-icon>
             </div>
-            <button type="button" (click)="clearFile($event)" class="ml-2 text-slate-400 hover:text-danger dark:text-slate-500 dark:hover:text-red-400">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-              </svg>
-            </button>
+            
+            <p class="text-sm font-medium text-slate-700 dark:text-slate-200">
+              <span class="text-blue-600 dark:text-blue-400">Cargar Archivo</span>
+            </p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">CSV o XLSX</p>
           </div>
-        </div>
 
-        <!-- Configuration Options -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Modo</label>
-            <select formControlName="mode" class="block w-full rounded-md border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm focus:border-accent focus:ring-accent sm:text-sm p-2 border">
-              <option value="completo">Completo</option>
-              <option value="parcial">Parcial</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Tipo de Credenciales</label>
-            <select formControlName="credentialsType" class="block w-full rounded-md border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm focus:border-accent focus:ring-accent sm:text-sm p-2 border">
-              <option value="todas">Todas</option>
-              <option value="solo_correo">Solo Correo</option>
-            </select>
+          <div *ngIf="selectedFile() as file" class="w-full relative z-10">
+              <div class="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm animate-fade-in text-left">
+                 <div class="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg text-green-600 dark:text-green-400 shrink-0">
+                    <lucide-icon name="file-text" class="w-5 h-5"></lucide-icon>
+                 </div>
+                 
+                 <div class="flex-1 overflow-hidden">
+                   <p class="text-sm font-semibold text-slate-900 dark:text-white truncate">{{ file.name }}</p>
+                   <p class="text-xs text-slate-500 dark:text-slate-400 font-mono">{{ (file.size / 1024).toFixed(2) }} KB</p>
+                 </div>
+                 
+                 <button type="button" (click)="clearFile($event)" class="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors">
+                   <lucide-icon name="x" class="w-4 h-4"></lucide-icon>
+                 </button>
+              </div>
           </div>
         </div>
-
-        <!-- Submit Button -->
-        <div class="flex justify-end">
-          <button type="submit" [disabled]="uploadForm.invalid || !selectedFile()" 
-            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary dark:bg-blue-600 hover:bg-slate-800 dark:hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-            Iniciar Proceso
-          </button>
-        </div>
-      </form>
     </div>
   `,
   styles: []
 })
 export class UploadFormComponent {
   @Input() disabled: boolean = false;
-  @Output() upload = new EventEmitter<CorreosRequest>();
+  @Output() fileSelected = new EventEmitter<File | null>();
   
   isDragging = signal(false);
   selectedFile = signal<File | null>(null);
   
-  uploadForm = new FormBuilder().group({
-    mode: ['completo', Validators.required],
-    credentialsType: ['todas', Validators.required]
-  });
-
-  // ... (keeping methods as they are, just ensuring types are correct)
-  // Re-implementing methods to ensure no OnboardingRequest remains in method signatures in the invisible part
-  
   onDragOver(event: DragEvent) {
+    if (this.disabled) return;
     event.preventDefault();
     event.stopPropagation();
     this.isDragging.set(true);
@@ -112,6 +77,7 @@ export class UploadFormComponent {
   }
 
   onDrop(event: DragEvent) {
+    if (this.disabled) return;
     event.preventDefault();
     event.stopPropagation();
     this.isDragging.set(false);
@@ -123,6 +89,7 @@ export class UploadFormComponent {
   }
 
   onFileSelected(event: Event) {
+    if (this.disabled) return;
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.handleFile(input.files[0]);
@@ -132,6 +99,7 @@ export class UploadFormComponent {
   handleFile(file: File) {
     if (file.name.endsWith('.csv') || file.name.endsWith('.xlsx')) {
       this.selectedFile.set(file);
+      this.fileSelected.emit(file);
     } else {
       alert('Solo archivos .csv y .xlsx son permitidos');
     }
@@ -140,16 +108,6 @@ export class UploadFormComponent {
   clearFile(event: Event) {
     event.stopPropagation();
     this.selectedFile.set(null);
-  }
-
-  onSubmit() {
-    if (this.uploadForm.valid && this.selectedFile()) {
-      const request: CorreosRequest = {
-        file: this.selectedFile()!,
-        mode: this.uploadForm.value.mode as any,
-        credentialsType: this.uploadForm.value.credentialsType as any
-      };
-      this.upload.emit(request);
-    }
+    this.fileSelected.emit(null);
   }
 }

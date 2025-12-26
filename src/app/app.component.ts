@@ -27,7 +27,7 @@ import { OnInit } from '@angular/core';
         <app-sidebar *ngIf="authService.isAuthenticated()" class="flex-none h-full z-10 hidden md:block"></app-sidebar>
 
         <!-- Main Content -->
-        <main class="flex-1 overflow-auto p-4 sm:p-6 lg:p-8 w-full">
+        <main class="flex-1 overflow-auto w-full" [ngClass]="{'p-4 sm:p-6 lg:p-8': authService.isAuthenticated()}">
           <router-outlet></router-outlet>
         </main>
       </div>
